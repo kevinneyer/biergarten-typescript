@@ -1,7 +1,12 @@
 import React from 'react';
 import { useState } from 'react';
 
-const Login = () => {
+interface LoginProps {
+    setUser: (user: LoginResponseInterface) => void;
+    currentUser: UserInterface;
+}
+
+const Login = ({ setUser, currentUser }: LoginProps) => {
     const [username, setUsername] = useState<string | null>(null);
     const [password, setPassword] = useState<string | null>(null);
 
@@ -27,12 +32,14 @@ const Login = () => {
             })
         })
         .then(res => res.json())
-        .then(data => console.log(data))
+        .then(data => {
+            setUser(data);
+        })
     };
 
     return (
         <div className="flex flex-col items-center">
-            Login
+            { currentUser?.username ?? 'Please Login' }
             <form className="w-[600px] flex flex-col gap-4 mt-5" onSubmit={loginHandler}>
                 <div className='text-black flex flex-col gap-6'>
                     <input className='bg-white' type="text" placeholder="Enter Username..." onChange={handleUsernameChange} />

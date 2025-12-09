@@ -20,6 +20,11 @@ declare global {
         image: string;
         username: string;
     }
+
+    interface LoginResponseInterface {
+        user: UserInterface;
+        token: string;
+    }
 };
 
 export {};
