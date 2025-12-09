@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 interface LoginProps {
     setUser: (user: LoginResponseInterface) => void;
-    currentUser: UserInterface;
+    currentUser: UserInterface | null;
 }
 
 const Login = ({ setUser, currentUser }: LoginProps) => {

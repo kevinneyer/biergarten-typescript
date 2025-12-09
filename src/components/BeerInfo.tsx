@@ -3,7 +3,7 @@ interface BeerInfoProps {
 }
 
 const BeerInfo = ({beer}: BeerInfoProps) => {
-    const likeBeerHandler = (beerId: number) => {
+    const likeBeerHandler = (beerId: number): void => {
         fetch(`http://127.0.0.1:3000/api/v1/like/${beerId}`, {
             method: 'POST',
             'headers': {

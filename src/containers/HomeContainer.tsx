@@ -3,6 +3,8 @@ import BeersContainer from "./BeersContainer";
 import BeerPageContainer from "./BeerPageContainer";
 import Login from "../components/Login";
 import { useState, useEffect } from 'react';
+import NavBar from "../components/NavBar";
+import LandingPage from "../components/LandingPage";
 
 const HomeContainer = () => {
     const [currentUser, setCurrentUser] = useState<UserInterface | null>(null);
@@ -10,7 +12,7 @@ const HomeContainer = () => {
     useEffect(() => {
         const token = localStorage.token;
         if (token) {
-            fetch('http://localhost:3001/api/v1/auto_login', {
+            fetch('http://localhost:3000/api/v1/auto_login', {
                 headers: {
                     "Authorization": token
                 }
@@ -32,17 +34,20 @@ const HomeContainer = () => {
         localStorage.token = response.token;
     };
 
-    // const logoutUser = () => {
-    //     setCurrentUser(null);
-    //     localStorage.removeItem('token');
-    // };
+    const logoutUser = (): void => {
+        setCurrentUser(null);
+        localStorage.removeItem('token');
+    };
 
     return (
         <>
-            <Login setUser={setUser} currentUser={currentUser} />
+            
             <BrowserRouter>
+            <NavBar currentUser={currentUser} logoutUser={logoutUser}/>
                 <Routes>
-                    <Route path='/beers' element={<BeersContainer />} />
+                    <Route path='/' element={<LandingPage currentUser={currentUser} />} />
+                    <Route path='/login' element={ <Login setUser={setUser} currentUser={currentUser} />} />
+                    <Route path='/beers' element={<BeersContainer currentUser={currentUser} />} />
                     <Route path='/beers/:beerId' element={<BeerPageContainer />} />
                 </Routes>
             </BrowserRouter>
