@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import { useNavigate } from "react-router";
 
 interface LoginProps {
     setUser: (user: LoginResponseInterface) => void;
@@ -17,7 +18,9 @@ const Login = ({ setUser, currentUser }: LoginProps) => {
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setPassword(e.target.value);
     };
-
+    
+    const navigate = useNavigate();
+    
     const loginHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         fetch('http://localhost:3000/api/v1/login', {
@@ -33,7 +36,9 @@ const Login = ({ setUser, currentUser }: LoginProps) => {
         })
         .then(res => res.json())
         .then(data => {
+            
             setUser(data);
+            navigate('/profile')
         })
     };
 

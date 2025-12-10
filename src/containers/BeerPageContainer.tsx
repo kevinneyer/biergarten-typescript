@@ -18,8 +18,8 @@ const BeerPageContainer = () => {
     return (
         <div className='px-[50px]'>
             <div className='pt-10 grid grid-cols-2 gap-4'>
-                {showBeer ? <BeerInfo beer={showBeer}/> : null}
-                <Reviews />
+                {showBeer ? <BeerInfo beer={showBeer} /> : null}
+                <Reviews beer={showBeer} />
             </div>
         </div>
     )
