@@ -12,14 +12,6 @@ const BeerCard = ({beer}: BeerCardProps) => {
                     <div>{beer.name}</div>
                     <div>{beer.brewery}</div>
                 </div>
-                <div>
-                    <div>
-                        {beer.style} - {beer.abv}%
-                    </div>
-                </div>
-                <div className='pt-2'>
-                    {beer.description}
-                </div>
                 <div className='mt-4'>
                     <button 
                         className='bg-blue-200 p-2 rounded-sm' 

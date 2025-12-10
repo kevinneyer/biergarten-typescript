@@ -14,6 +14,17 @@ declare global {
         reviews: Array;
         favorites: Array<BeerInterface>;
     }
+    interface UserInterface {
+        email: string;
+        id: number;
+        image: string;
+        username: string;
+    }
+
+    interface LoginResponseInterface {
+        user: UserInterface;
+        token: string;
+    }
 };
 
 export {};

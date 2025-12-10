@@ -16,9 +16,11 @@ const BeerPageContainer = () => {
     }, [beerId]);
 
     return (
-        <div className='grid grid-cols-2 gap-4'>
-            {showBeer ? <BeerInfo beer={showBeer}/> : null}
-            <Reviews />
+        <div className='px-[50px]'>
+            <div className='pt-10 grid grid-cols-2 gap-4'>
+                {showBeer ? <BeerInfo beer={showBeer}/> : null}
+                <Reviews />
+            </div>
         </div>
     )
 };
