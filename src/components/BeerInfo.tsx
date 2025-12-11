@@ -1,30 +1,27 @@
+import { useState, useEffect } from "react";
+
 interface BeerInfoProps {
-    beer: BeerInterface
+    beer: BeerInterface;
+    currentUser: UserInterface | null;
 }
 
-const BeerInfo = ({beer}: BeerInfoProps) => {
+const BeerInfo = ({beer, currentUser}: BeerInfoProps) => {
+    const [beerIsLiked, setBeerIsLiked] = useState<boolean>(false);
+
     const likeBeerHandler = (beerId: number): void => {
         fetch(`http://127.0.0.1:3000/api/v1/like/${beerId}`, {
             method: 'POST',
             'headers': {
                 'Content-Type': 'appilcation/json',
                 'accepts': 'appilcation/json',
+                "Authorization": localStorage.token
             },
-            body: JSON.stringify({id: beerId})
         })
-        .then(response => {
-            // if (!response.ok) {
-            //     throw new Error(`HTTP error! status: ${response.status}`);
-            // }
-            // return response.json(); // Or response.text() if the response is not JSON
-            // })
-            // .then(data => {
-            // console.log('Success:', data);
-            // })
-            // .catch(error => {
-            // console.error('Error:', error);
-            console.log(response)
-        });
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            setBeerIsLiked(true);
+        })
 
     };
 
@@ -42,11 +39,19 @@ const BeerInfo = ({beer}: BeerInfoProps) => {
                 <div><span className='font-bold'>Recommended For:</span> {beer.recommended_drinking}</div>
             </div>
             <div className='mt-3 flex gap-2 cursor-auto'>
-                <button 
-                    className='bg-black rounded-md w-[200px] p-2.5' type='button'
-                    onClick={() => likeBeerHandler(beer.id)}    
-                >Like
-                </button>
+                { !beerIsLiked ? 
+                    <button 
+                        className='bg-green-800 rounded-md w-[200px] p-2.5' type='button'
+                        onClick={() => likeBeerHandler(beer.id)}    
+                    >Like
+                    </button>
+                    :
+                    <button 
+                        className='bg-red-800 rounded-md w-[200px] p-2.5' type='button'
+                        // onClick={() => likeBeerHandler(beer.id)}    
+                    >Dislike
+                    </button>
+                }
                 <button className='bg-black rounded-md w-[200px] p-2.5' type='button'>Save for Later</button>
             </div>
         </div>
