@@ -9,6 +9,7 @@ import ProfileContainer from "./ProfileContainer";
 
 const HomeContainer = () => {
     const [currentUser, setCurrentUser] = useState<UserInterface | null>(null);
+    const [userFetchComplete, setUserFetchComplete] = useState<boolean>(false);
 
     useEffect(() => {
         const token = localStorage.token;
@@ -25,6 +26,7 @@ const HomeContainer = () => {
                 } 
                 else {
                     setCurrentUser(data);
+                    setUserFetchComplete(true);
                 }
             })
         } 
@@ -47,10 +49,10 @@ const HomeContainer = () => {
             <BrowserRouter>
                 <NavBar currentUser={currentUser} logoutUser={logoutUser}/>
                 <Routes>
-                    <Route path='/' element={<LandingPage currentUser={currentUser} />} />
+                    <Route path='/' element={<LandingPage currentUser={currentUser} userFetchComplete={userFetchComplete} />} />
                     <Route path='/login' element={ <Login setUser={setUser} currentUser={currentUser} />} />
                     <Route path='/beers' element={<BeersContainer currentUser={currentUser} />} />
-                    <Route path='/beers/:beerId' element={<BeerPageContainer />} />
+                    <Route path='/beers/:beerId' element={<BeerPageContainer currentUser={currentUser} />} />
                     <Route path='/profile' element={<ProfileContainer currentUser={currentUser} />} />
                 </Routes> 
             </BrowserRouter>

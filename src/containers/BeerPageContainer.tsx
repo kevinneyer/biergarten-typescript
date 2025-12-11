@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import Reviews from "../components/Reviews";
 import BeerInfo from "../components/BeerInfo";
 
-const BeerPageContainer = () => {
+interface BeerPageContainerProps {
+    currentUser: UserInterface | null;
+}
+
+const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
     const { beerId } = useParams();
     const [showBeer, setShowBeer] = useState<BeerInterface | null>(null);
 
@@ -18,7 +22,7 @@ const BeerPageContainer = () => {
     return (
         <div className='px-[50px]'>
             <div className='pt-10 grid grid-cols-2 gap-4'>
-                {showBeer ? <BeerInfo beer={showBeer} /> : null}
+                {showBeer ? <BeerInfo beer={showBeer} currentUser={currentUser} /> : null}
                 <Reviews beer={showBeer} />
             </div>
         </div>
