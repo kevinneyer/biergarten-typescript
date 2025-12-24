@@ -8,7 +8,8 @@ declare global {
         img_url: string;
         description: string;
         tasting_notes: string;
-        likes: number | null;
+        likes: [] | null;
+        likes_count: number | null;
         recommended_drinking: string;
         url: string;
         reviews: Array;
@@ -19,6 +20,7 @@ declare global {
         id: number;
         image: string;
         username: string;
+        likes: Array;
     }
 
     interface LoginResponseInterface {
