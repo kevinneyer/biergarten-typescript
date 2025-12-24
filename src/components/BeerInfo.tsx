@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface BeerInfoProps {
     beer: BeerInterface;
-    currentUser: UserInterface | null;
+    isLiked: boolean;
 }
 
-const BeerInfo = ({beer, currentUser}: BeerInfoProps) => {
-    const [beerIsLiked, setBeerIsLiked] = useState<boolean>(false);
+const BeerInfo = ({beer, isLiked}: BeerInfoProps) => {
+    const [beerIsLiked, setBeerIsLiked] = useState<boolean>(isLiked);
 
     const likeBeerHandler = (beerId: number): void => {
         fetch(`http://127.0.0.1:3000/api/v1/like/${beerId}`, {
@@ -18,11 +18,7 @@ const BeerInfo = ({beer, currentUser}: BeerInfoProps) => {
             },
         })
         .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            setBeerIsLiked(true);
-        })
-
+        .then(() => setBeerIsLiked(true))
     };
 
     return (

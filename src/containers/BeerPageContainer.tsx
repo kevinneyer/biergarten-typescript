@@ -3,26 +3,29 @@ import { useEffect, useState } from "react";
 import Reviews from "../components/Reviews";
 import BeerInfo from "../components/BeerInfo";
 
-interface BeerPageContainerProps {
-    currentUser: UserInterface | null;
-}
-
-const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
+const BeerPageContainer = () => {
     const { beerId } = useParams();
     const [showBeer, setShowBeer] = useState<BeerInterface | null>(null);
+    const [beerIsLiked, setBeerIsLiked] = useState<boolean>(false);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:3000/api/v1/beers/${beerId}`)
+        const token = localStorage.token;
+        fetch(`http://127.0.0.1:3000/api/v1/beers/${beerId}`, {
+            headers: {
+                "Authorization": token
+            }
+        })
         .then(res => res.json())
         .then(data => {
-            setShowBeer(data);
+            setShowBeer(data.beer);
+            setBeerIsLiked(data.is_liked)
         })
     }, [beerId]);
 
     return (
         <div className='px-[50px]'>
             <div className='pt-10 grid grid-cols-2 gap-4'>
-                {showBeer ? <BeerInfo beer={showBeer} currentUser={currentUser} /> : null}
+                {showBeer ? <BeerInfo beer={showBeer} isLiked={beerIsLiked}/> : null}
                 <Reviews beer={showBeer} />
             </div>
         </div>
