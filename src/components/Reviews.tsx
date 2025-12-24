@@ -1,35 +1,23 @@
+import ReviewCard from "./cards/ReviewCard";
+import AddReview from "./AddReview";
 interface ReviewsProps {
     beer: BeerInterface | null;
 }
- interface ReviewInterface {
-    review_id: number;
-    content: string;
-    user: string;
-    rating: number;
-    user_image: string;
-    user_id: number;
- }
 
 const Reviews = ({beer}: ReviewsProps) => {
     return (
         <div>
             <div className='text-3xl font-bold'>Reviews</div>
-            <div>
+            <div className='flex flex-col p-4 gap-6'>
                 {beer && beer.reviews.length > 0 ?
-                    beer.reviews.map((review: ReviewInterface) => (
-                        <div>
-                            <div>
-                                {review.content} by {review.user}
-                            </div>
-                            <div>
-                                {review.rating} / 5 stars
-                            </div>
-                        </div>
+                    beer.reviews.map((review, index) => (
+                        <ReviewCard review={review} key={index} />
                     ))
                 :
                 'No Reviews Yet!'    
-            }
+                }
             </div>
+            <AddReview beer={beer} />
         </div>
     )
 };

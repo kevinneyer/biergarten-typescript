@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import BeerCard from "../components/BeerCard";
+import BeerCard from "../components/cards/BeerCard";
 import { NavLink } from "react-router";
 interface BeersContainerProps {
     currentUser: UserInterface | null;

@@ -18,15 +18,21 @@ const BeerPageContainer = () => {
         .then(res => res.json())
         .then(data => {
             setShowBeer(data.beer);
-            setBeerIsLiked(data.is_liked)
+            setBeerIsLiked(data.is_liked);
         })
     }, [beerId]);
 
     return (
         <div className='px-[50px]'>
-            <div className='pt-10 grid grid-cols-2 gap-4'>
-                {showBeer ? <BeerInfo beer={showBeer} isLiked={beerIsLiked}/> : null}
-                <Reviews beer={showBeer} />
+            <div>
+                {showBeer ? 
+                <div className='pt-10 grid grid-cols-2 gap-8'>
+                    <BeerInfo beer={showBeer} isLiked={beerIsLiked}/> 
+                    <Reviews beer={showBeer} />
+                </div>
+                :
+                'Loading...'
+                }
             </div>
         </div>
     )
