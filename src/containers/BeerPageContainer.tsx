@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import Reviews from "../components/Reviews";
 import BeerInfo from "../components/BeerInfo";
 
-const BeerPageContainer = () => {
+interface BeerPageContainerProps {
+    currentUser: UserInterface | null;
+}
+
+const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
     const { beerId } = useParams();
     const [showBeer, setShowBeer] = useState<BeerInterface | null>(null);
     const [beerIsLiked, setBeerIsLiked] = useState<boolean>(false);
@@ -27,8 +31,8 @@ const BeerPageContainer = () => {
             <div>
                 {showBeer ? 
                 <div className='pt-10 grid grid-cols-2 gap-8'>
-                    <BeerInfo beer={showBeer} isLiked={beerIsLiked}/> 
-                    <Reviews beer={showBeer} />
+                    <BeerInfo beer={showBeer} isLiked={beerIsLiked} currentUser={currentUser}/> 
+                    <Reviews beer={showBeer} currentUser={currentUser} />
                 </div>
                 :
                 'Loading...'
