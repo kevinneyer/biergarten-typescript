@@ -36,13 +36,27 @@ const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
         }
     };
 
+    const handleReviewDeleted = (reviewId: number): void => {
+        if (showBeer) {
+            setShowBeer({
+                ...showBeer,
+                reviews: showBeer.reviews.filter(review => review.review_id !== reviewId)
+            });
+        }
+    }
+
     return (
         <div className='px-[50px]'>
             <div>
                 {showBeer ? 
                 <div className='pt-10 grid grid-cols-2 gap-8'>
                     <BeerInfo beer={showBeer} isLiked={beerIsLiked} currentUser={currentUser}/> 
-                    <Reviews beer={showBeer} currentUser={currentUser} onReviewAdded={handleReviewAdded} />
+                    <Reviews 
+                        beer={showBeer} 
+                        currentUser={currentUser} 
+                        onReviewAdded={handleReviewAdded}
+                        onReviewDeleted={handleReviewDeleted}
+                    />
                 </div>
                 :
                 'Loading...'
