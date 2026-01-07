@@ -1,4 +1,12 @@
 declare global {
+    interface ReviewInterface {
+        review_id: number;
+        content: string;
+        user: string;
+        rating: number;
+        user_image: string;
+        user_id: number;
+    }
     interface BeerInterface {
         id: number;
         brewery: string;
@@ -12,7 +20,7 @@ declare global {
         likes_count: number | null;
         recommended_drinking: string;
         url: string;
-        reviews: Array;
+        reviews: Array<ReviewInterface>;
         favorites: Array<BeerInterface>;
     }
     interface UserInterface {

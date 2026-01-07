@@ -52,7 +52,7 @@ const HomeContainer = () => {
                     <Route path='/' element={<LandingPage currentUser={currentUser} userFetchComplete={userFetchComplete} />} />
                     <Route path='/login' element={ <Login setUser={setUser} currentUser={currentUser} />} />
                     <Route path='/beers' element={<BeersContainer currentUser={currentUser} />} />
-                    <Route path='/beers/:beerId' element={<BeerPageContainer />} />
+                    <Route path='/beers/:beerId' element={<BeerPageContainer currentUser={currentUser} />} />
                     <Route path='/profile' element={<ProfileContainer currentUser={currentUser} />} />
                 </Routes> 
             </BrowserRouter>

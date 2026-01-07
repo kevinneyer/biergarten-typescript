@@ -1,35 +1,75 @@
+import { useState } from "react";
+import ReviewCard from "./cards/ReviewCard";
+import AddReview from "./AddReview";
 interface ReviewsProps {
     beer: BeerInterface | null;
+    currentUser: UserInterface | null;
+    onReviewAdded: (newReview: ReviewInterface) => void;
 }
- interface ReviewInterface {
-    review_id: number;
-    content: string;
-    user: string;
-    rating: number;
-    user_image: string;
-    user_id: number;
- }
 
-const Reviews = ({beer}: ReviewsProps) => {
+const Reviews = ({beer, currentUser, onReviewAdded}: ReviewsProps) => {
+    const [contentError, setContentError] = useState<boolean>(false);
+    const [ratingError, setRatingError] = useState<boolean>(false);
+
+    const submitReviewHandler = (e: React.FormEvent<HTMLFormElement>, content: string, rating: string): void => {
+        e.preventDefault();
+        setContentError(content.length == 0);
+        setRatingError(rating == "0");
+    
+        if (
+            currentUser && beer
+        ) {
+            const token = localStorage.token;
+            fetch('http://localhost:3000/api/v1/reviews', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    accepts: 'application/json',
+                    "Authorization": token
+                },
+                body: JSON.stringify({ 
+                    content: content,
+                    beer: {
+                        beer_id: beer.id,
+                        beer_name: beer.name
+                    },
+                    rating: rating
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const newReview: ReviewInterface = {
+                    review_id: data.id,
+                    content: data.content,
+                    user: data.user.username,
+                    rating: data.rating,
+                    user_image: data.user.user_image,
+                    user_id: data.user.id,
+                }
+                onReviewAdded(newReview); // Call the callback with the new review
+            // Reset form, etc.
+            })
+        }
+    };
     return (
-        <div>
+        <div className='px-2.5'>
             <div className='text-3xl font-bold'>Reviews</div>
-            <div>
+            <div className='flex flex-col p-4 gap-6'>
                 {beer && beer.reviews.length > 0 ?
-                    beer.reviews.map((review: ReviewInterface) => (
-                        <div>
-                            <div>
-                                {review.content} by {review.user}
-                            </div>
-                            <div>
-                                {review.rating} / 5 stars
-                            </div>
-                        </div>
+                    beer.reviews.map((review, index) => (
+                        <ReviewCard review={review} key={index} />
                     ))
                 :
                 'No Reviews Yet!'    
-            }
+                }
             </div>
+            <AddReview 
+                contentError={contentError}
+                ratingError={ratingError}
+                submitReviewForm={submitReviewHandler}
+                setContentError={setContentError}
+                setRatingError={setRatingError}
+            />
         </div>
     )
 };
