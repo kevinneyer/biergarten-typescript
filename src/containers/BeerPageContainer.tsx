@@ -26,13 +26,23 @@ const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
         })
     }, [beerId]);
 
+    // Callback function to update beer when a review is added
+    const handleReviewAdded = (newReview: ReviewInterface) => {
+        if (showBeer) {
+            setShowBeer({
+                ...showBeer,
+                reviews: [...showBeer.reviews, newReview]
+            });
+        }
+    };
+
     return (
         <div className='px-[50px]'>
             <div>
                 {showBeer ? 
                 <div className='pt-10 grid grid-cols-2 gap-8'>
                     <BeerInfo beer={showBeer} isLiked={beerIsLiked} currentUser={currentUser}/> 
-                    <Reviews beer={showBeer} currentUser={currentUser} />
+                    <Reviews beer={showBeer} currentUser={currentUser} onReviewAdded={handleReviewAdded} />
                 </div>
                 :
                 'Loading...'

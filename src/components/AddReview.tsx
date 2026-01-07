@@ -16,17 +16,17 @@ const AddReview = ({contentError, ratingError, submitReviewForm, setContentError
     const reviewHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
         setReviewContent(e.target.value);
 
-        if (contentError && reviewContent.length > 0) {
-            setContentError(false);
-        }
+        // if (contentError && reviewContent.length > 0) {
+        //     setContentError(false);
+        // }
     };
 
     const ratingHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setReviewRating(e.target.value);
 
-        if (ratingError && reviewRating > "0") {
-            setRatingError(false);
-        }
+        // if (ratingError && reviewRating > "0") {
+        //     setRatingError(false);
+        // }
     };
 
     return (

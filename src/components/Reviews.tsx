@@ -4,26 +4,20 @@ import AddReview from "./AddReview";
 interface ReviewsProps {
     beer: BeerInterface | null;
     currentUser: UserInterface | null;
+    onReviewAdded: (newReview: ReviewInterface) => void;
 }
 
-const Reviews = ({beer, currentUser}: ReviewsProps) => {
+const Reviews = ({beer, currentUser, onReviewAdded}: ReviewsProps) => {
     const [contentError, setContentError] = useState<boolean>(false);
     const [ratingError, setRatingError] = useState<boolean>(false);
 
     const submitReviewHandler = (e: React.FormEvent<HTMLFormElement>, content: string, rating: string): void => {
         e.preventDefault();
-        if (content.length == 0) {
-            setContentError(true);
-        }
-
-        if (rating == "0") {
-            setRatingError(true);
-        }
-
+        setContentError(content.length == 0);
+        setRatingError(rating == "0");
+    
         if (
-            currentUser && 
-            beer &&
-            (!contentError && !ratingError)
+            currentUser && beer
         ) {
             const token = localStorage.token;
             fetch('http://localhost:3000/api/v1/reviews', {
@@ -34,16 +28,27 @@ const Reviews = ({beer, currentUser}: ReviewsProps) => {
                     "Authorization": token
                 },
                 body: JSON.stringify({ 
-                content: content,
-                beer: {
-                    beer_id: beer.id,
-                    beer_name: beer.name
-                },
-                rating: rating
+                    content: content,
+                    beer: {
+                        beer_id: beer.id,
+                        beer_name: beer.name
+                    },
+                    rating: rating
                 })
             })
             .then(res => res.json())
-            .then(data => console.log(data))
+            .then(data => {
+                const newReview: ReviewInterface = {
+                    review_id: data.id,
+                    content: data.content,
+                    user: data.user.username,
+                    rating: data.rating,
+                    user_image: data.user.user_image,
+                    user_id: data.user.id,
+                }
+                onReviewAdded(newReview); // Call the callback with the new review
+            // Reset form, etc.
+            })
         }
     };
     return (
