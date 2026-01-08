@@ -19,10 +19,37 @@ const BeerInfo = ({beer, isLiked, currentUser}: BeerInfoProps) => {
                     "Authorization": localStorage.token
                 },
             })
-            .then(res => res.json())
-            .then(() => setBeerIsLiked(true))
+            .then(res => {
+                if (res.ok) {
+                    setBeerIsLiked(true);   
+                } else {
+                    alert('Something went wrong!');
+                }
+            })
         } else {
-            alert('You must be logged in to to rate!')
+            alert('You must be logged in!');
+        }
+    };
+
+    const unlikeBeerHandler = (beerId: number): void => {
+        if (currentUser) {
+            fetch(`http://127.0.0.1:3000/api/v1/like/${beerId}`, {
+                method: 'DELETE',
+                'headers': {
+                    'Content-Type': 'appilcation/json',
+                    'accepts': 'appilcation/json',
+                    "Authorization": localStorage.token
+                },
+            })
+            .then(res => {
+                if (res.ok) {
+                    setBeerIsLiked(false);   
+                } else {
+                    alert('Something went wrong!');
+                }
+            })
+        } else {
+            alert('You must be logged in!');
         }
     };
 
@@ -49,7 +76,7 @@ const BeerInfo = ({beer, isLiked, currentUser}: BeerInfoProps) => {
                     :
                     <button 
                         className='bg-red-800 rounded-md w-[200px] p-2.5' type='button'
-                        // onClick={() => likeBeerHandler(beer.id)}    
+                        onClick={() => unlikeBeerHandler(beer.id)}    
                     >Dislike
                     </button>
                 }
