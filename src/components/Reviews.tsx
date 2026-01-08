@@ -1,6 +1,6 @@
-import { useState } from "react";
-import ReviewCard from "./cards/ReviewCard";
-import AddReview from "./AddReview";
+import { useState } from 'react';
+import ReviewCard from './cards/ReviewCard';
+import AddReview from './AddReview';
 interface ReviewsProps {
     beer: BeerInterface | null;
     currentUser: UserInterface | null;
@@ -15,7 +15,7 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
     const submitReviewHandler = (e: React.FormEvent<HTMLFormElement>, content: string, rating: string): void => {
         e.preventDefault();
         setContentError(content.length == 0);
-        setRatingError(rating == "0");
+        setRatingError(rating == '0');
     
         if (
             currentUser && beer
@@ -26,7 +26,7 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
                 headers: {
                     'content-type': 'application/json',
                     accepts: 'application/json',
-                    "Authorization": token
+                    'Authorization': token
                 },
                 body: JSON.stringify({ 
                     content: content,
@@ -47,7 +47,7 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
                     user_image: data.user.user_image,
                     user_id: data.user.id,
                 }
-                onReviewAdded(newReview); // Call the callback with the new review
+                onReviewAdded(newReview);
             // Reset form, etc.
             })
         }
@@ -67,7 +67,7 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
             if (res.ok) {
                     onReviewDeleted(id);
                 }
-        })
+            })
         }
     };
 

@@ -1,7 +1,7 @@
-import { useParams } from "react-router";
-import { useEffect, useState } from "react";
-import Reviews from "../components/Reviews";
-import BeerInfo from "../components/BeerInfo";
+import { useParams } from 'react-router';
+import { useEffect, useState } from 'react';
+import Reviews from '../components/Reviews';
+import BeerInfo from '../components/BeerInfo';
 
 interface BeerPageContainerProps {
     currentUser: UserInterface | null;
@@ -26,8 +26,7 @@ const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
         })
     }, [beerId]);
 
-    // Callback function to update beer when a review is added
-    const handleReviewAdded = (newReview: ReviewInterface) => {
+    const handleReviewAdded = (newReview: ReviewInterface): void => {
         if (showBeer) {
             setShowBeer({
                 ...showBeer,
@@ -43,7 +42,7 @@ const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
                 reviews: showBeer.reviews.filter(review => review.review_id !== reviewId)
             });
         }
-    }
+    };
 
     return (
         <div className='px-[50px]'>
