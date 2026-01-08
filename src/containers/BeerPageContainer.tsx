@@ -1,7 +1,7 @@
-import { useParams } from "react-router";
-import { useEffect, useState } from "react";
-import Reviews from "../components/Reviews";
-import BeerInfo from "../components/BeerInfo";
+import { useParams } from 'react-router';
+import { useEffect, useState } from 'react';
+import Reviews from '../components/Reviews';
+import BeerInfo from '../components/BeerInfo';
 
 interface BeerPageContainerProps {
     currentUser: UserInterface | null;
@@ -26,12 +26,20 @@ const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
         })
     }, [beerId]);
 
-    // Callback function to update beer when a review is added
-    const handleReviewAdded = (newReview: ReviewInterface) => {
+    const handleReviewAdded = (newReview: ReviewInterface): void => {
         if (showBeer) {
             setShowBeer({
                 ...showBeer,
                 reviews: [...showBeer.reviews, newReview]
+            });
+        }
+    };
+
+    const handleReviewDeleted = (reviewId: number): void => {
+        if (showBeer) {
+            setShowBeer({
+                ...showBeer,
+                reviews: showBeer.reviews.filter(review => review.review_id !== reviewId)
             });
         }
     };
@@ -42,7 +50,12 @@ const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
                 {showBeer ? 
                 <div className='pt-10 grid grid-cols-2 gap-8'>
                     <BeerInfo beer={showBeer} isLiked={beerIsLiked} currentUser={currentUser}/> 
-                    <Reviews beer={showBeer} currentUser={currentUser} onReviewAdded={handleReviewAdded} />
+                    <Reviews 
+                        beer={showBeer} 
+                        currentUser={currentUser} 
+                        onReviewAdded={handleReviewAdded}
+                        onReviewDeleted={handleReviewDeleted}
+                    />
                 </div>
                 :
                 'Loading...'
