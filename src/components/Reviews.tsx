@@ -14,42 +14,53 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
 
     const submitReviewHandler = (e: React.FormEvent<HTMLFormElement>, content: string, rating: string): void => {
         e.preventDefault();
-        setContentError(content.length == 0);
-        setRatingError(rating == '0');
-    
+        
+        if (!currentUser) {
+            alert('You need to be logged in to leave a review');
+            return;
+        }
+
         if (
-            currentUser && beer
+            beer
         ) {
-            const token = localStorage.token;
-            fetch('http://localhost:3000/api/v1/reviews', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                    accepts: 'application/json',
-                    'Authorization': token
-                },
-                body: JSON.stringify({ 
-                    content: content,
-                    beer: {
-                        beer_id: beer.id,
-                        beer_name: beer.name
+            if (content.length > 0 && rating !== "0") {
+                const token = localStorage.token;
+                fetch('http://localhost:3000/api/v1/reviews', {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        accepts: 'application/json',
+                        'Authorization': token
                     },
-                    rating: rating
+                    body: JSON.stringify({ 
+                        content: content,
+                        beer: {
+                            beer_id: beer.id,
+                            beer_name: beer.name
+                        },
+                        rating: rating
+                    })
                 })
-            })
-            .then(res => res.json())
-            .then(data => {
-                const newReview: ReviewInterface = {
-                    review_id: data.id,
-                    content: data.content,
-                    user: data.user.username,
-                    rating: data.rating,
-                    user_image: data.user.user_image,
-                    user_id: data.user.id,
-                }
-                onReviewAdded(newReview);
-            // Reset form, etc.
-            })
+                .then(res => res.json())
+                .then(data => {
+                    const newReview: ReviewInterface = {
+                        review_id: data.id,
+                        content: data.content,
+                        user: data.user.username,
+                        rating: data.rating,
+                        user_image: data.user.user_image,
+                        user_id: data.user.id,
+                    }
+                    onReviewAdded(newReview);
+                // Reset form, etc.
+                })
+            } else {
+                setContentError(!content);
+                setRatingError(rating == '0');
+                return;
+            }
+        } else {
+            alert('Something went wrong!')
         }
     };
 
@@ -92,8 +103,7 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
                 contentError={contentError}
                 ratingError={ratingError}
                 submitReviewForm={submitReviewHandler}
-                setContentError={setContentError}
-                setRatingError={setRatingError}
+                currentUser={currentUser}
             />
         </div>
     )
