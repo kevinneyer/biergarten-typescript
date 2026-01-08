@@ -11,18 +11,25 @@ interface ReviewsProps {
 const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsProps) => {
     const [contentError, setContentError] = useState<boolean>(false);
     const [ratingError, setRatingError] = useState<boolean>(false);
+    const [resetForm, setResetForm] = useState<boolean>(false);
 
     const submitReviewHandler = (e: React.FormEvent<HTMLFormElement>, content: string, rating: string): void => {
         e.preventDefault();
-        
+        setResetForm(false);
+
+        // A non logged in user should never be able to access this form, but this is here as a fail safe.
         if (!currentUser) {
             alert('You need to be logged in to leave a review');
             return;
         }
 
+        // Prevent sending bad data to DB by checking for beer.
         if (
             beer
         ) {
+            setContentError(!content);
+            setRatingError(rating == '0');
+            // If all fields have necessary data, submite form.
             if (content.length > 0 && rating !== "0") {
                 const token = localStorage.token;
                 fetch('http://localhost:3000/api/v1/reviews', {
@@ -46,17 +53,15 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
                     const newReview: ReviewInterface = {
                         review_id: data.id,
                         content: data.content,
-                        user: data.user.username,
+                        user: data.user.user_name,
                         rating: data.rating,
                         user_image: data.user.user_image,
                         user_id: data.user.id,
                     }
                     onReviewAdded(newReview);
-                // Reset form, etc.
+                    setResetForm(true);
                 })
             } else {
-                setContentError(!content);
-                setRatingError(rating == '0');
                 return;
             }
         } else {
@@ -104,6 +109,7 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
                 ratingError={ratingError}
                 submitReviewForm={submitReviewHandler}
                 currentUser={currentUser}
+                resetForm={resetForm}
             />
         </div>
     )

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import type { ChangeEvent } from 'react';
 
 interface AddReviewProps {
@@ -6,12 +6,13 @@ interface AddReviewProps {
     ratingError: boolean;
     submitReviewForm: (e: React.FormEvent<HTMLFormElement>, content: string, rating: string) => void;
     currentUser: UserInterface | null;
+    resetForm: boolean;
 }
 
-const AddReview = ({contentError, ratingError, submitReviewForm, currentUser}: AddReviewProps) => {
-    const [reviewContent, setReviewContent] = useState<string>("");
-    const [reviewRating, setReviewRating] = useState<string>("0");
-
+const AddReview = ({contentError, ratingError, submitReviewForm, currentUser, resetForm}: AddReviewProps) => {
+    const [reviewContent, setReviewContent] = useState<string>('');
+    const [reviewRating, setReviewRating] = useState<string>('0');
+    
     const reviewHandler = (e: ChangeEvent<HTMLTextAreaElement>): void => {
         setReviewContent(e.target.value);
     };
