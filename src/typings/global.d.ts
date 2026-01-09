@@ -29,6 +29,10 @@ declare global {
         image: string;
         username: string;
         likes: Array;
+        followeds: Array;
+        followers: Array;
+        reviews: Array;
+        favorites: Array;
     }
 
     interface LoginResponseInterface {

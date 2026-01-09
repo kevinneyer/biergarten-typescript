@@ -23,7 +23,7 @@ const HomeContainer = () => {
             .then(data => {
                 if (data.errors) {
                     alert(data.errors);
-                    setUserFetchComplete(true); // Add this
+                    setUserFetchComplete(true);
                 } 
                 else {
                     setCurrentUser(data);
@@ -32,7 +32,7 @@ const HomeContainer = () => {
             })
             .catch(error => {
                 console.error('Auto-login failed:', error);
-                setUserFetchComplete(true); // Add this for network errors
+                setUserFetchComplete(true);
             });
         }   
     }, [token]);
@@ -59,6 +59,7 @@ const HomeContainer = () => {
                     <Route path='/beers' element={<BeersContainer currentUser={currentUser} />} />
                     <Route path='/beers/:beerId' element={<BeerPageContainer currentUser={currentUser} />} />
                     <Route path='/profile' element={<ProfileContainer currentUser={currentUser} />} />
+                    <Route path='/users/:userId' element={<ProfileContainer currentUser={currentUser} />} />
                 </Routes> 
             </BrowserRouter>
         </>
