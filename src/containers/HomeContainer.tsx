@@ -1,36 +1,41 @@
-import { BrowserRouter, Routes, Route } from "react-router";
-import BeersContainer from "./BeersContainer";
-import BeerPageContainer from "./BeerPageContainer";
-import Login from "../components/Login";
+import { BrowserRouter, Routes, Route } from 'react-router';
+import BeersContainer from './BeersContainer';
+import BeerPageContainer from './BeerPageContainer';
+import Login from '../components/Login';
 import { useState, useEffect } from 'react';
-import NavBar from "../components/NavBar";
-import LandingPage from "../components/LandingPage";
-import ProfileContainer from "./ProfileContainer";
+import NavBar from '../components/NavBar';
+import LandingPage from '../components/LandingPage';
+import ProfileContainer from './ProfileContainer';
 
 const HomeContainer = () => {
+    const token = localStorage.token;
     const [currentUser, setCurrentUser] = useState<UserInterface | null>(null);
-    const [userFetchComplete, setUserFetchComplete] = useState<boolean>(false);
+    const [userFetchComplete, setUserFetchComplete] = useState<boolean>(!token);
 
     useEffect(() => {
-        const token = localStorage.token;
         if (token) {
             fetch('http://localhost:3000/api/v1/auto_login', {
                 headers: {
-                    "Authorization": token
+                    'Authorization': token
                 }
             })
             .then(res => res.json())
             .then(data => {
                 if (data.errors) {
                     alert(data.errors);
+                    setUserFetchComplete(true); // Add this
                 } 
                 else {
                     setCurrentUser(data);
                     setUserFetchComplete(true);
                 }
             })
-        } 
-    }, []);
+            .catch(error => {
+                console.error('Auto-login failed:', error);
+                setUserFetchComplete(true); // Add this for network errors
+            });
+        }   
+    }, [token]);
     
     const setUser = (response: LoginResponseInterface): void => {
         setCurrentUser(response.user);
@@ -41,7 +46,7 @@ const HomeContainer = () => {
         setCurrentUser(null);
         localStorage.removeItem('token');
 
-        window.location.href = "/";
+        window.location.href = '/';
     };
 
     return (
@@ -50,7 +55,7 @@ const HomeContainer = () => {
                 <NavBar currentUser={currentUser} logoutUser={logoutUser}/>
                 <Routes>
                     <Route path='/' element={<LandingPage currentUser={currentUser} userFetchComplete={userFetchComplete} />} />
-                    <Route path='/login' element={ <Login setUser={setUser} currentUser={currentUser} />} />
+                    <Route path='/login' element={<Login setUser={setUser} currentUser={currentUser} />} />
                     <Route path='/beers' element={<BeersContainer currentUser={currentUser} />} />
                     <Route path='/beers/:beerId' element={<BeerPageContainer currentUser={currentUser} />} />
                     <Route path='/profile' element={<ProfileContainer currentUser={currentUser} />} />
