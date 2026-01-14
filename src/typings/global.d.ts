@@ -6,6 +6,8 @@ declare global {
         rating: number;
         user_image: string;
         user_id: number;
+        beer: string;
+        beer_img: string
     }
     interface BeerInterface {
         id: number;
