@@ -1,6 +1,7 @@
 import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import Profile from '../components/Profile';
+import { API_URL } from '../config.ts';
 interface ProfileContainerProps {
     currentUser: UserInterface | null;
 }
@@ -12,7 +13,7 @@ const ProfileContainer = ({currentUser}: ProfileContainerProps) => {
     // Since this component is shared between 2 routes, only fetch if a userId is present.
     useEffect(() => {
         if (userId) {
-            fetch(`http://localhost:3000/api/v1/users/${userId}`)
+            fetch(`${API_URL}/${userId}`)
                 // This will need some kind of error assessment for ids that don't exist.
                 .then((res) => res.json())
                 .then(data => {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { API_URL } from '../config.ts';
 interface BeerInfoProps {
     beer: BeerInterface;
     isLiked: boolean;
@@ -11,7 +11,7 @@ const BeerInfo = ({beer, isLiked, currentUser}: BeerInfoProps) => {
 
     const likeBeerHandler = (beerId: number): void => {
         if (currentUser) {
-            fetch(`http://127.0.0.1:3000/api/v1/like/${beerId}`, {
+            fetch(`${API_URL}/like/${beerId}`, {
                 method: 'POST',
                 'headers': {
                     'Content-Type': 'appilcation/json',
@@ -33,7 +33,7 @@ const BeerInfo = ({beer, isLiked, currentUser}: BeerInfoProps) => {
 
     const unlikeBeerHandler = (beerId: number): void => {
         if (currentUser) {
-            fetch(`http://127.0.0.1:3000/api/v1/like/${beerId}`, {
+            fetch(`${API_URL}/like/${beerId}`, {
                 method: 'DELETE',
                 'headers': {
                     'Content-Type': 'appilcation/json',

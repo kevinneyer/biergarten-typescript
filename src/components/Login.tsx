@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from "react-router";
-
+import { API_URL } from '../config.ts';
 interface LoginProps {
     setUser: (user: LoginResponseInterface) => void;
     currentUser: UserInterface | null;
@@ -23,7 +23,7 @@ const Login = ({ setUser, currentUser }: LoginProps) => {
     
     const loginHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        fetch('http://localhost:3000/api/v1/login', {
+        fetch(`${API_URL}/login`, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',

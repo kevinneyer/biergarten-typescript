@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ReviewCard from './cards/ReviewCard';
 import AddReview from './AddReview';
+import { API_URL } from '../config.ts';
 interface ReviewsProps {
     beer: BeerInterface | null;
     currentUser: UserInterface | null;
@@ -32,7 +33,7 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
             // If all fields have necessary data, submite form.
             if (content.length > 0 && rating !== "0") {
                 const token = localStorage.token;
-                fetch('http://localhost:3000/api/v1/reviews', {
+                fetch(`${API_URL}/reviews`, {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json',
@@ -73,7 +74,7 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
         e.preventDefault();
 
         if (currentUser) {
-            fetch(`http://localhost:3000/api/v1/reviews/${id}`, {
+            fetch(`${API_URL}/reviews/${id}`, {
                 method: 'DELETE',
                 headers:{
                     'content-type': 'application/json'

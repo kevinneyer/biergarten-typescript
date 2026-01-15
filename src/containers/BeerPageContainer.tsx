@@ -2,6 +2,7 @@ import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import Reviews from '../components/Reviews';
 import BeerInfo from '../components/BeerInfo';
+import { API_URL } from '../config.ts';
 
 interface BeerPageContainerProps {
     currentUser: UserInterface | null;
@@ -14,7 +15,7 @@ const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
 
     useEffect(() => {
         const token = localStorage.token;
-        fetch(`http://127.0.0.1:3000/api/v1/beers/${beerId}`, {
+        fetch(`${API_URL}/beers/${beerId}`, {
             headers: {
                 "Authorization": token
             }

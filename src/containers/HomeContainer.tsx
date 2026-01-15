@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import LandingPage from '../components/LandingPage';
 import ProfileContainer from './ProfileContainer';
+import { API_URL } from '../config.ts';
 
 const HomeContainer = () => {
     const token = localStorage.token;
@@ -14,7 +15,7 @@ const HomeContainer = () => {
 
     useEffect(() => {
         if (token) {
-            fetch('http://localhost:3000/api/v1/auto_login', {
+            fetch(`${API_URL}/auto_login`, {
                 headers: {
                     'Authorization': token
                 }
