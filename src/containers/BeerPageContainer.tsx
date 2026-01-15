@@ -6,9 +6,10 @@ import { API_URL } from '../config.ts';
 
 interface BeerPageContainerProps {
     currentUser: UserInterface | null;
+    updateCurrentUser: (updatedUser: UserInterface) => void;
 }
 
-const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
+const BeerPageContainer = ({currentUser, updateCurrentUser}: BeerPageContainerProps) => {
     const { beerId } = useParams();
     const [showBeer, setShowBeer] = useState<BeerInterface | null>(null);
     const [beerIsLiked, setBeerIsLiked] = useState<boolean>(false);
@@ -34,6 +35,35 @@ const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
                 reviews: [...showBeer.reviews, newReview]
             });
         }
+
+        if (currentUser?.id == newReview.user_id) {
+            updateCurrentUser({
+                ...currentUser,
+                reviews: [...currentUser.reviews, newReview]
+            });
+        }
+    }; 
+
+    const deleteReviewApiHandler = (e: React.MouseEvent<HTMLDivElement>, id: number): void => {
+        e.preventDefault();
+
+        if (currentUser) {
+            fetch(`${API_URL}/reviews/${id}`, {
+                method: 'DELETE',
+                headers:{
+                    'content-type': 'application/json'
+                }
+            })
+            .then((res) => {
+                if (res.ok) {
+                    handleReviewDeleted(id); 
+                    updateCurrentUser({
+                        ...currentUser,
+                        reviews: currentUser.reviews?.filter((review: ReviewInterface) => review.review_id !== id)
+                    })
+                }
+            })
+        }
     };
 
     const handleReviewDeleted = (reviewId: number): void => {
@@ -55,7 +85,7 @@ const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
                         beer={showBeer} 
                         currentUser={currentUser} 
                         onReviewAdded={handleReviewAdded}
-                        onReviewDeleted={handleReviewDeleted}
+                        deleteReview={deleteReviewApiHandler}
                     />
                 </div>
                 :

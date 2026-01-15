@@ -50,6 +50,10 @@ const HomeContainer = () => {
         window.location.href = '/';
     };
 
+    const updateCurrentUser = (updatedUser: UserInterface): void => {
+        setCurrentUser(updatedUser);
+    };
+
     return (
         <> 
             <BrowserRouter>
@@ -58,7 +62,7 @@ const HomeContainer = () => {
                     <Route path='/' element={<LandingPage currentUser={currentUser} userFetchComplete={userFetchComplete} />} />
                     <Route path='/login' element={<Login setUser={setUser} currentUser={currentUser} />} />
                     <Route path='/beers' element={<BeersContainer currentUser={currentUser} />} />
-                    <Route path='/beers/:beerId' element={<BeerPageContainer currentUser={currentUser} />} />
+                    <Route path='/beers/:beerId' element={<BeerPageContainer currentUser={currentUser} updateCurrentUser={updateCurrentUser} />} />
                     <Route path='/profile' element={<ProfileContainer currentUser={currentUser} />} />
                     <Route path='/users/:userId' element={<ProfileContainer currentUser={currentUser} />} />
                 </Routes> 

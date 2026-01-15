@@ -1,6 +1,7 @@
 interface ProfileProps {
     currentUser: UserInterface | null;
     profileUser: UserInterface | null;
+    deleteReview: (e: React.MouseEvent<HTMLDivElement>, id: number) => void;
 }
 interface FavoriteInterface {
     beer: string;
@@ -10,12 +11,12 @@ interface FavoriteInterface {
     image: string;
 }
 
-const Profile = ({profileUser, currentUser}: ProfileProps) => {
+const Profile = ({profileUser, currentUser, deleteReview}: ProfileProps) => {
     const hasReviews = profileUser?.reviews?.length > 0;
     const hasDesiredBeers = profileUser?.favorites?.length > 0;
 
-    const deleteReviewHandler = (id: number) => {
-        console.log(id);
+    const deleteReviewHandler = (e: React.MouseEvent<HTMLDivElement>, id: number): void => {
+        deleteReview(e, id)
     };
 
     return (
@@ -52,7 +53,7 @@ const Profile = ({profileUser, currentUser}: ProfileProps) => {
                                             {review.user_id == currentUser?.id ?
                                                 <div 
                                                     className='p-2 bg-black text-white rounded-md mt-2 hover:bg-red-700 hover:text-black cursor-pointer transition-all ease-in-out'
-                                                    onClick={() => deleteReviewHandler(review.review_id)}
+                                                    onClick={(e) => deleteReviewHandler(e, review.review_id)}
                                                 >
                                                     Delete Review
                                                 </div>

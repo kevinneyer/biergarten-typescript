@@ -6,10 +6,10 @@ interface ReviewsProps {
     beer: BeerInterface | null;
     currentUser: UserInterface | null;
     onReviewAdded: (newReview: ReviewInterface) => void;
-    onReviewDeleted: (id: number) => void;
+    deleteReview: (e: React.MouseEvent<HTMLDivElement>, id: number) => void;
 }
 
-const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsProps) => {
+const Reviews = ({beer, currentUser, onReviewAdded, deleteReview}: ReviewsProps) => {
     const [contentError, setContentError] = useState<boolean>(false);
     const [ratingError, setRatingError] = useState<boolean>(false);
     const [resetForm, setResetForm] = useState<boolean>(false);
@@ -30,7 +30,7 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
         ) {
             setContentError(!content);
             setRatingError(rating == '0');
-            // If all fields have necessary data, submite form.
+            // If all fields have necessary data, submit form.
             if (content.length > 0 && rating !== "0") {
                 const token = localStorage.token;
                 fetch(`${API_URL}/reviews`, {
@@ -57,7 +57,9 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
                         user: data.user.user_name,
                         rating: data.rating,
                         user_image: data.user.user_image,
-                        user_id: data.user.id,
+                        user_id: data.user.user_id,
+                        beer: beer.name,
+                        beer_img: beer.img_url
                     }
                     onReviewAdded(newReview);
                     setResetForm(true);
@@ -71,21 +73,7 @@ const Reviews = ({beer, currentUser, onReviewAdded, onReviewDeleted}: ReviewsPro
     };
 
     const deleteReviewHandler = (e: React.MouseEvent<HTMLDivElement>, id: number): void => {
-        e.preventDefault();
-
-        if (currentUser) {
-            fetch(`${API_URL}/reviews/${id}`, {
-                method: 'DELETE',
-                headers:{
-                    'content-type': 'application/json'
-                }
-            })
-            .then((res) => {
-            if (res.ok) {
-                    onReviewDeleted(id);
-                }
-            })
-        }
+        deleteReview(e, id)
     };
 
     return (
