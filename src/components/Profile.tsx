@@ -10,9 +10,13 @@ interface FavoriteInterface {
     image: string;
 }
 
-const Profile = ({profileUser}: ProfileProps) => {
+const Profile = ({profileUser, currentUser}: ProfileProps) => {
     const hasReviews = profileUser?.reviews?.length > 0;
     const hasDesiredBeers = profileUser?.favorites?.length > 0;
+
+    const deleteReviewHandler = (id: number) => {
+        console.log(id);
+    };
 
     return (
         <div className='p-8'>
@@ -37,7 +41,7 @@ const Profile = ({profileUser}: ProfileProps) => {
                                 'No Reviews Yet!'
                             :
                                 profileUser.reviews.map((review: ReviewInterface) => (
-                                    <div className='bg-white flex gap-2 items-start text-black p-4 min-h-[125px] rounded-lg shadow-sm shadow-white mt-2'>
+                                    <div  key={review.review_id} className='bg-white flex gap-2 items-start text-black p-4 min-h-[125px] rounded-lg shadow-sm shadow-white mt-2'>
                                         <div>
                                             <img className='w-24 object-contain' src={review.beer_img} />
                                         </div>
@@ -45,6 +49,14 @@ const Profile = ({profileUser}: ProfileProps) => {
                                             <div className='font-bold'>{review.beer}</div>
                                             <div className='text-balance text-left'>{review.content}</div>
                                             <div>{review.rating} / 5 stars</div>
+                                            {review.user_id == currentUser?.id ?
+                                                <div 
+                                                    className='p-2 bg-black text-white rounded-md mt-2 hover:bg-red-700 hover:text-black cursor-pointer transition-all ease-in-out'
+                                                    onClick={() => deleteReviewHandler(review.review_id)}
+                                                >
+                                                    Delete Review
+                                                </div>
+                                            : null}
                                         </div>
                                     </div>
                                 ))
@@ -59,15 +71,15 @@ const Profile = ({profileUser}: ProfileProps) => {
                                     'Nothing to see here!'
                                     :
                                     profileUser.favorites.map((favorite: FavoriteInterface) => (
-                                        <div className='bg-white flex gap-2 items-start text-black p-4 max-h-[125px] min-h-[125px] rounded-lg shadow-sm shadow-white mt-2'>
-                                        <div>
-                                            <img className='w-20 h-20 object-contain' src={favorite.image} />
+                                        <div key={favorite.favorite_id} className='bg-white flex gap-2 items-start text-black p-4 max-h-[125px] min-h-[125px] rounded-lg shadow-sm shadow-white mt-2'>
+                                            <div>
+                                                <img className='w-20 h-20 object-contain' src={favorite.image} />
+                                            </div>
+                                            <div className='flex flex-col items-start'>
+                                                <div className='font-bold'>{favorite.beer}</div>
+                                                <div className='text-balance text-left'>by {favorite.brewery}</div>
+                                            </div>
                                         </div>
-                                        <div className='flex flex-col items-start'>
-                                            <div className='font-bold'>{favorite.beer}</div>
-                                            <div className='text-balance text-left'>by {favorite.brewery}</div>
-                                        </div>
-                                    </div>
                                     ))
                                 }
                             </div>
