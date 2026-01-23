@@ -63,8 +63,8 @@ const HomeContainer = () => {
                     <Route path='/login' element={<Login setUser={setUser} currentUser={currentUser} />} />
                     <Route path='/beers' element={<BeersContainer currentUser={currentUser} />} />
                     <Route path='/beers/:beerId' element={<BeerPageContainer currentUser={currentUser} updateCurrentUser={updateCurrentUser} />} />
-                    <Route path='/profile' element={<ProfileContainer currentUser={currentUser} />} />
-                    <Route path='/users/:userId' element={<ProfileContainer currentUser={currentUser} />} />
+                    <Route path='/profile' element={<ProfileContainer currentUser={currentUser} updateCurrentUser={updateCurrentUser} />} />
+                    <Route path='/users/:userId' element={<ProfileContainer currentUser={currentUser} updateCurrentUser={updateCurrentUser} />} />
                 </Routes> 
             </BrowserRouter>
         </>

@@ -4,9 +4,10 @@ import Profile from '../components/Profile';
 import { API_URL } from '../config.ts';
 interface ProfileContainerProps {
     currentUser: UserInterface | null;
+    updateCurrentUser: (updatedUser: UserInterface) => void;
 }
 
-const ProfileContainer = ({currentUser}: ProfileContainerProps) => {
+const ProfileContainer = ({currentUser, updateCurrentUser}: ProfileContainerProps) => {
     const { userId } = useParams();
     const [fetchedUser, setFetchedUser] = useState<UserInterface | null>(null);
 
@@ -24,7 +25,7 @@ const ProfileContainer = ({currentUser}: ProfileContainerProps) => {
 
     // If userId, use fetchedUser, otherwise default to currentUser.
     // Could be potentially be problematic if no logged in and userId does not exist.
-    let profileUser = userId ? fetchedUser : currentUser;
+    const profileUser = userId ? fetchedUser : currentUser;
 
     const deleteReviewApiHandler = (e: React.MouseEvent<HTMLDivElement>, id: number): void => {
         e.preventDefault();
@@ -40,19 +41,16 @@ const ProfileContainer = ({currentUser}: ProfileContainerProps) => {
                 if (res.ok) {
                     handleReviewDeleted(id); 
                 }
-            })
+            });
         }
     };
 
-    // This doesn't work.
-    const handleReviewDeleted = (reviewId: number): void => {
-        if (profileUser) {
-            const updatedProfile = {
-                ...profileUser,
-                reviews: profileUser.reviews.filter((review: ReviewInterface) => review.review_id !== reviewId)
-            };
-
-            profileUser = updatedProfile
+    const handleReviewDeleted = (id: number): void => {
+        if (currentUser && currentUser.id === profileUser?.id) {
+            updateCurrentUser({
+                ...currentUser,
+                reviews: currentUser.reviews?.filter((review: ReviewInterface) => review.review_id !== id)
+            });
         }
     };
 
