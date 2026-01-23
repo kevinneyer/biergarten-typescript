@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import BeerCard from "../components/cards/BeerCard";
 import { NavLink } from "react-router";
+import { API_URL } from '../config.ts';
 interface BeersContainerProps {
     currentUser: UserInterface | null;
 }
@@ -10,7 +11,7 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:3000/api/v1/beers')
+        fetch(`${API_URL}/beers`)
         .then(res => res.json())
         .then((data: BeerInterface[]) => {
             setBeers(data);

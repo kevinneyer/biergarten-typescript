@@ -2,19 +2,21 @@ import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import Reviews from '../components/Reviews';
 import BeerInfo from '../components/BeerInfo';
+import { API_URL } from '../config.ts';
 
 interface BeerPageContainerProps {
     currentUser: UserInterface | null;
+    updateCurrentUser: (updatedUser: UserInterface) => void;
 }
 
-const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
+const BeerPageContainer = ({currentUser, updateCurrentUser}: BeerPageContainerProps) => {
     const { beerId } = useParams();
     const [showBeer, setShowBeer] = useState<BeerInterface | null>(null);
     const [beerIsLiked, setBeerIsLiked] = useState<boolean>(false);
 
     useEffect(() => {
         const token = localStorage.token;
-        fetch(`http://127.0.0.1:3000/api/v1/beers/${beerId}`, {
+        fetch(`${API_URL}/beers/${beerId}`, {
             headers: {
                 "Authorization": token
             }
@@ -32,6 +34,35 @@ const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
                 ...showBeer,
                 reviews: [...showBeer.reviews, newReview]
             });
+        }
+
+        if (currentUser?.id == newReview.user_id) {
+            updateCurrentUser({
+                ...currentUser,
+                reviews: [...currentUser.reviews, newReview]
+            });
+        }
+    }; 
+
+    const deleteReviewApiHandler = (e: React.MouseEvent<HTMLDivElement>, id: number): void => {
+        e.preventDefault();
+
+        if (currentUser) {
+            fetch(`${API_URL}/reviews/${id}`, {
+                method: 'DELETE',
+                headers:{
+                    'content-type': 'application/json'
+                }
+            })
+            .then((res) => {
+                if (res.ok) {
+                    handleReviewDeleted(id); 
+                    updateCurrentUser({
+                        ...currentUser,
+                        reviews: currentUser.reviews?.filter((review: ReviewInterface) => review.review_id !== id)
+                    })
+                }
+            })
         }
     };
 
@@ -54,7 +85,7 @@ const BeerPageContainer = ({currentUser}: BeerPageContainerProps) => {
                         beer={showBeer} 
                         currentUser={currentUser} 
                         onReviewAdded={handleReviewAdded}
-                        onReviewDeleted={handleReviewDeleted}
+                        deleteReview={deleteReviewApiHandler}
                     />
                 </div>
                 :

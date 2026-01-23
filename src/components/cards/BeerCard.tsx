@@ -7,12 +7,13 @@ interface BeerCardProps {
 const BeerCard = ({beer}: BeerCardProps) => {
     return (
         <>
-            <div className='bg-white flex flex-col text-black p-4 max-h-[300px] min-h-[300px] rounded-lg shadow-sm shadow-white'>
-                <div>
+            <div className='bg-white flex flex-col text-black p-4 max-h-[400px] min-h-[400px] rounded-lg shadow-sm shadow-white'>
+                <div className='mt-auto'>
+                    <img className='h-48 w-96 object-contain' src={beer.img_url} />
                     <div>{beer.name}</div>
                     <div>{beer.brewery}</div>
                 </div>
-                <div className='mt-4'>
+                <div className='mt-auto'>
                     <button 
                         className='bg-blue-200 p-2 rounded-sm' 
                         type="button"
