@@ -14,7 +14,7 @@ const ProfileContainer = ({currentUser, updateCurrentUser}: ProfileContainerProp
     // Since this component is shared between 2 routes, only fetch if a userId is present.
     useEffect(() => {
         if (userId) {
-            fetch(`${API_URL}/${userId}`)
+            fetch(`${API_URL}/users/${userId}`)
                 // This will need some kind of error assessment for ids that don't exist.
                 .then((res) => res.json())
                 .then(data => {
