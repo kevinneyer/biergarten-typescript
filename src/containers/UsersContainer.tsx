@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import UserCard from '../components/cards/UserCard.tsx';
 import { API_URL } from '../config.ts';
+import LoginCallout from '../components/LoginCallout.tsx';
 
 interface UserContainerProps {
     currentUser: UserInterface | null;
@@ -10,10 +11,9 @@ interface UserContainerProps {
 
 const UsersContainer = ({currentUser}: UserContainerProps) => {
     const [users, setUsers] = useState<UserInterface[]>([]);
-
+    const token = localStorage.token;
+    
     useEffect(() => {
-        const token = localStorage.token;
-
         fetch(`${API_URL}/users`, {
             headers: {
                 'Authorization': token
@@ -37,26 +37,23 @@ const UsersContainer = ({currentUser}: UserContainerProps) => {
 
             setUsers(data)
         })
-    }, [currentUser]);
+    }, [currentUser, token]);
 
     return (
         <div>
-            <div>
-                All Users
-            </div>
-            <div>
-                {users.length <= 0 ?
-                    'Loading...'
-                    :
+            {users.length <= 0 ? 'Loading...'
+                :
+                currentUser ?
                     <div className='mt-[25px] w-full flex flex-wrap justify-between gap-4'>
                         {users.map((user) => (
                             <UserCard user={user} key={user.id} />
                         ))}
                     </div>
-                }
-            </div>
+                :
+                <LoginCallout />
+            }
         </div>
-    )
+    );
 };
 
 export default UsersContainer;

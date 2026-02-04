@@ -8,6 +8,7 @@ import LandingPage from '../components/LandingPage';
 import ProfileContainer from './ProfileContainer';
 import UsersContainer from './UsersContainer.tsx';
 import { API_URL } from '../config.ts';
+import Register from '../components/Register.tsx';
 
 const HomeContainer = () => {
     const token = localStorage.token;
@@ -61,7 +62,8 @@ const HomeContainer = () => {
                 <NavBar currentUser={currentUser} logoutUser={logoutUser}/>
                 <Routes>
                     <Route path='/' element={<LandingPage currentUser={currentUser} userFetchComplete={userFetchComplete} />} />
-                    <Route path='/login' element={<Login setUser={setUser} currentUser={currentUser} />} />
+                    <Route path='/login' element={<Login setUser={setUser} />} />
+                    <Route path='/register' element={<Register setUser={setUser} />} />
                     <Route path='/beers' element={<BeersContainer currentUser={currentUser} />} />
                     <Route path='/beers/:beerId' element={<BeerPageContainer currentUser={currentUser} updateCurrentUser={updateCurrentUser} />} />
                     <Route path='/profile' element={<ProfileContainer currentUser={currentUser} updateCurrentUser={updateCurrentUser} />} />

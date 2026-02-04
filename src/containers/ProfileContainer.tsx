@@ -23,6 +23,8 @@ const ProfileContainer = ({currentUser, updateCurrentUser}: ProfileContainerProp
     const [isFollowing, setIsFollowing] = useState<boolean>(false);
     const [followId, setFollowId] = useState<number | null>(null);
 
+    const token = localStorage.token;
+
     // Since this component is shared between 2 routes, only fetch if a userId is present.
     useEffect(() => {
         if (userId) {
@@ -38,7 +40,7 @@ const ProfileContainer = ({currentUser, updateCurrentUser}: ProfileContainerProp
                     }
                 })
         }
-    }, [userId, currentUser]);
+    }, [userId, currentUser, token]);
 
     // If userId, use fetchedUser, otherwise default to currentUser.
     // Could be potentially be problematic if no logged in and userId does not exist.
