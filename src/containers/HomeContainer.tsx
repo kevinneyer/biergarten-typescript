@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import LandingPage from '../components/LandingPage';
 import ProfileContainer from './ProfileContainer';
+import UsersContainer from './UsersContainer.tsx';
 import { API_URL } from '../config.ts';
 
 const HomeContainer = () => {
@@ -64,6 +65,7 @@ const HomeContainer = () => {
                     <Route path='/beers' element={<BeersContainer currentUser={currentUser} />} />
                     <Route path='/beers/:beerId' element={<BeerPageContainer currentUser={currentUser} updateCurrentUser={updateCurrentUser} />} />
                     <Route path='/profile' element={<ProfileContainer currentUser={currentUser} updateCurrentUser={updateCurrentUser} />} />
+                    <Route path='/users' element={<UsersContainer currentUser={currentUser} updateCurrentUser={updateCurrentUser} />} />
                     <Route path='/users/:userId' element={<ProfileContainer currentUser={currentUser} updateCurrentUser={updateCurrentUser} />} />
                 </Routes> 
             </BrowserRouter>

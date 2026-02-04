@@ -35,6 +35,7 @@ declare global {
         followers: Array;
         reviews: Array;
         favorites: Array;
+        active_relationships: Array;
     }
 
     interface LoginResponseInterface {
