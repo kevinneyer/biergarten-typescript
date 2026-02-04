@@ -2,6 +2,9 @@ interface ProfileProps {
     currentUser: UserInterface | null;
     profileUser: UserInterface | null;
     deleteReview: (e: React.MouseEvent<HTMLDivElement>, id: number) => void;
+    createFollowHandler: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => void;
+    deleteFollowHandler: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+    isFollowing: boolean;
 }
 interface FavoriteInterface {
     beer: string;
@@ -11,12 +14,20 @@ interface FavoriteInterface {
     image: string;
 }
 
-const Profile = ({profileUser, currentUser, deleteReview}: ProfileProps) => {
+const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, deleteFollowHandler, isFollowing}: ProfileProps) => {
     const hasReviews = profileUser?.reviews?.length > 0;
     const hasDesiredBeers = profileUser?.favorites?.length > 0;
 
     const deleteReviewHandler = (e: React.MouseEvent<HTMLDivElement>, id: number): void => {
         deleteReview(e, id)
+    };
+
+    const createFollow = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
+        createFollowHandler(e, id);
+    };
+
+    const deleteFollow = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        deleteFollowHandler(e);
     };
 
     return (
@@ -33,6 +44,25 @@ const Profile = ({profileUser, currentUser, deleteReview}: ProfileProps) => {
                             <div>
                                 Followers: {profileUser.followers?.length}
                             </div>
+                        </div>
+                        <div>
+                            {isFollowing ?
+                            <button 
+                                className='bg-red-700 p-2 rounded-sm w-[100px] cursor-pointer hover:bg-red-900 transition-all ease-in-out' 
+                                type="button"
+                                onClick={(e) => deleteFollow(e)}
+                            >
+                                Unfollow
+                            </button>
+                            :
+                            <button 
+                                className='bg-green-700 p-2 rounded-sm w-[100px] cursor-pointer hover:bg-green-900 transition-all ease-in-out' 
+                                type="button"
+                                onClick={(e) => createFollow(e, profileUser.id)}
+                            >
+                                Follow
+                            </button>
+                            }
                         </div>
                     </div>
                     <div>

@@ -6,7 +6,7 @@ interface UserCardProps {
 const UserCard = ({user}: UserCardProps) => {
     return (
         <>
-            <div className='bg-white flex flex-col text-black p-4 max-h-[400px] min-h-[400px] rounded-lg shadow-sm shadow-white'>
+            <div className='bg-white flex flex-col text-black p-4 w-[304px] max-h-[400px] min-h-[400px] rounded-lg shadow-sm shadow-white'>
                 <div className='mt-auto'>
                     <img className='h-48 w-96 object-contain' src={user.image} />
                     <div>{user.username}</div>

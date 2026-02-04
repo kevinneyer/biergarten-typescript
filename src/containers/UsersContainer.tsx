@@ -7,6 +7,7 @@ interface UserContainerProps {
     updateCurrentUser: (updatedUser: UserInterface) => void;
 }
 
+
 const UsersContainer = ({currentUser}: UserContainerProps) => {
     const [users, setUsers] = useState<UserInterface[]>([]);
 
@@ -27,14 +28,16 @@ const UsersContainer = ({currentUser}: UserContainerProps) => {
             return res.json();
         })
         .then(data => {
-            let usersData = data;
-            if (currentUser) {
-                usersData = usersData.filter((user: UserInterface) => user.id !== currentUser.id);
-            }
+            // let usersData;
+            // if (currentUser) {
+            //     usersData = data.filter((user: UserInterface) => user.id !== currentUser.id);
+            // } else {
+            //     usersData = data;
+            // }
 
-            setUsers(usersData)
+            setUsers(data)
         })
-    }, [currentUser])
+    }, [currentUser]);
 
     return (
         <div>
@@ -45,9 +48,9 @@ const UsersContainer = ({currentUser}: UserContainerProps) => {
                 {users.length <= 0 ?
                     'Loading...'
                     :
-                    <div className='flex'>
+                    <div className='mt-[25px] w-full flex flex-wrap justify-between gap-4'>
                         {users.map((user) => (
-                            <UserCard user={user} />
+                            <UserCard user={user} key={user.id} />
                         ))}
                     </div>
                 }
