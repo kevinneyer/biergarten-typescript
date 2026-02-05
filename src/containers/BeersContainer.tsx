@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import BeerCard from "../components/cards/BeerCard";
-import { NavLink } from "react-router";
+import { useEffect, useState } from 'react';
+import BeerCard from '../components/cards/BeerCard';
 import { API_URL } from '../config.ts';
+import LoginCallout from '../components/LoginCallout.tsx';
 interface BeersContainerProps {
     currentUser: UserInterface | null;
 }
@@ -22,31 +22,15 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
     return(
         <div>
             {isLoading ? 'Loading' :
-            currentUser ?
-            <div className="grid grid-cols-4 gap-4">
-                {beers.map((beer: BeerInterface, idx) => 
-                    <BeerCard beer={beer} key={idx} />
-                )}
-            </div>
-            :
-            <div>
-                You Must Be Logged In to View This Page
-                <button 
-                    className='bg-blue-200 p-2 rounded-sm' 
-                    type="button"
-                >
-                    <NavLink
-                        to={`/login`}
-                        className={({ isActive }) =>
-                            isActive ? "text-red-500" : "text-black"
-                        }
-                        >
-                        Login
-                    </NavLink>
-                </button>
-            </div>
-            
-        }
+                currentUser ?
+                    <div className="grid grid-cols-4 gap-4">
+                        {beers.map((beer: BeerInterface, idx) => 
+                            <BeerCard beer={beer} key={idx} />
+                        )}
+                    </div>
+                :
+                <LoginCallout />
+            }
         </div>
     );
 };
