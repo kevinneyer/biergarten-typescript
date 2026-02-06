@@ -30,7 +30,7 @@ const Register = ({setUser}: RegisterProps) => {
         emailError: false,
         image: false,
     });
-    const [showSpinner, setShowSpinner] = useState<boolean>(true);
+    const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
