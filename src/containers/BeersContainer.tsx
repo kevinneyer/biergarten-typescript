@@ -3,6 +3,7 @@ import BeerCard from '../components/cards/BeerCard';
 import { API_URL } from '../config.ts';
 import LoginCallout from '../components/LoginCallout.tsx';
 import Filters from '../components/Filters.tsx';
+import { SyncLoader } from 'react-spinners';
 
 interface BeersContainerProps {
     currentUser: UserInterface | null;
@@ -18,6 +19,7 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
     const [filterStyles, setFilterStyles] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [style, setStyle] = useState<string | null>(null);
+    const [fetchError, setFetchError] = useState<boolean>(false);
     
     const slugify = (text: string): string => {
         return text.toLowerCase().replace(/\s+/g, '-');
@@ -34,41 +36,64 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
 
         fetch(url)
         .then((res) => {
-           
-            return res.json()
+            if (!res.ok) {
+                setBeers([]);
+                setIsLoading(false);
+                setFetchError(true);
+                return;
+            }
+
+            return res.json();
         })
         .then((data: DataObject) => {
             setBeers(data.beers);
-            setFilterStyles(data.styles)
+            setFilterStyles(data.styles);
+            setFetchError(false);
             setIsLoading(false);
         })
     }, [style]);
 
-    const onFilterChange = (style: string):void => {
-        setStyle(style);
+    const onFilterChange = (newStyle: string | null): void => {
+        if (newStyle !== style) {
+            setStyle(newStyle);
+            setIsLoading(true);
+            setFetchError(false);
+        }
     };
 
     return(
         <div>
-            {isLoading ? 'Loading' :
-                <div>
-                    <div className='absolute mt-[5px]'>
-                        <Filters 
-                            filterStyles={filterStyles}
-                            onFilterChange={onFilterChange}   
+            <div className='absolute mt-[5px]'>
+                <Filters 
+                    filterStyles={filterStyles}
+                    onFilterChange={onFilterChange}   
+                />
+            </div>
+            <div className='pt-15 h-full'>
+                {isLoading ? 
+                    <div className='pt-15'>
+                        <SyncLoader 
+                            color='#fff'
+                            size='10px'
                         />
-                    </div>
-                    {currentUser ?
-                        <div className="grid grid-cols-4 gap-4 pt-15">
-                            {beers.map((beer: BeerInterface, idx) => 
-                                <BeerCard beer={beer} key={idx} />
-                            )}
+                    </div> 
+                :
+                    !fetchError ?
+                        <div>
+                            {currentUser ?
+                                <div className="grid grid-cols-4 gap-4">
+                                    {beers.map((beer: BeerInterface, idx) => 
+                                        <BeerCard beer={beer} key={idx} />
+                                    )}
+                                </div>
+                            :
+                                <LoginCallout />
+                            }
                         </div>
                     :
-                        <LoginCallout />
-                    }
-                </div>
-            }
+                    'Something Went Wrong.'
+                }
+            </div>
         </div>
     );
 };

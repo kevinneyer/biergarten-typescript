@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 interface FiltersProps {
     filterStyles: string[];
-    onFilterChange: (style: string) => void;
+    onFilterChange: (style: string | null) => void;
 }
 const Filters = ({filterStyles, onFilterChange}: FiltersProps) => {
     const [styleFilterOpen, setStyleFilterOpen] = useState<boolean>(false);
@@ -18,8 +18,13 @@ const Filters = ({filterStyles, onFilterChange}: FiltersProps) => {
         onFilterChange(styleValue);
     };
 
+    const clearFilterHandler = () => {
+        setStyle(null);
+        onFilterChange(null)
+    };
+
     return (
-        <div>
+        <div className='flex'>
             <div 
                 className='w-[250px] bg-white  rounded-md border-2 border-black cursor-pointer text-black overflow-y-scroll'
                 style={{
@@ -40,6 +45,14 @@ const Filters = ({filterStyles, onFilterChange}: FiltersProps) => {
                         />
                     ))
                     : null}
+                </div>
+            </div>
+            <div 
+                className='w-[150px] bg-white  rounded-md border-2 border-black cursor-pointer text-black overflow-y-scroll max-h-10'
+                onClick={clearFilterHandler}
+            >
+                <div className='py-[5px] w-full text-center'>
+                    Clear Filters
                 </div>
             </div>
         </div>
