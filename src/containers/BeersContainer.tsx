@@ -19,6 +19,7 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
     const [filterStyles, setFilterStyles] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [style, setStyle] = useState<string | null>(null);
+    const [sort, setSort] = useState<string | null>(null);
     const [fetchError, setFetchError] = useState<boolean>(false);
     
     const slugify = (text: string): string => {
@@ -30,6 +31,10 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
         if (style) {
             const slug = slugify(style);
             queryParams.append('style', slug);
+        }
+
+        if (sort) {
+            queryParams.append('sort_by', sort);
         }
         const queryString = queryParams.toString();
         const url = `${API_URL}/beers?${queryString}`;
@@ -51,8 +56,9 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
             setFetchError(false);
             setIsLoading(false);
         })
-    }, [style]);
+    }, [style, sort]);
 
+    // This needs to be straightened out or combined into one function.
     const onFilterChange = (newStyle: string | null): void => {
         if (newStyle !== style) {
             setStyle(newStyle);
@@ -60,13 +66,19 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
             setFetchError(false);
         }
     };
+    // Specifically this.
+    const onSortChange = (sortString: string | null): void => {
+        console.log(sortString)
+        setSort(sortString);
+    };
 
     return(
         <div>
             <div className='absolute mt-[5px]'>
                 <Filters 
                     filterStyles={filterStyles}
-                    onFilterChange={onFilterChange}   
+                    onFilterChange={onFilterChange}
+                    onSortChange={onSortChange}  
                 />
             </div>
             <div className='pt-15 h-full'>
