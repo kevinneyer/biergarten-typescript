@@ -10,9 +10,8 @@ const Filters = ({filterStyles, onFilterChange, onSortChange}: FiltersProps) => 
     const [sortFilterOpen, setSortFilterOpen] = useState<boolean>(false);
     const [style, setStyle] = useState<string | null>(null);
     const [sort, setSort] = useState<string | null>(null);
-    // const [styleText, setStyleText] = useState<string>('Select a Style')
 
-    const sortLabels = ['ABV', 'Likes', 'Reviews', 'Rating'];
+    const sortLabels = ['ABV', 'Likes', 'Reviews', 'Rating'] ;
     const shouldShowClearButton = style || sort;
     const openHeight = '150px';
     const closedHeight = '40px';
@@ -26,7 +25,7 @@ const Filters = ({filterStyles, onFilterChange, onSortChange}: FiltersProps) => 
     const sortHandler = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const value = (e.target as HTMLInputElement).value;
         setSort(value);
-        onSortChange(value);
+        onSortChange(value.toLowerCase());
     };
 
     const clearFilterHandler = () => {
@@ -77,7 +76,7 @@ const Filters = ({filterStyles, onFilterChange, onSortChange}: FiltersProps) => 
                             key={index}
                             className='text-sm text-left bg-white border border-solid border-grey-200 cursor-pointer rounded pl-md pr-[30px] w-full h-11 truncate shadow-xs'
                             type='button' 
-                            value={label.toLowerCase()}
+                            value={label}
                             onClick={(e) => sortHandler(e)}
                         />
                     ))

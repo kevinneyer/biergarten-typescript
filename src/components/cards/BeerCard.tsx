@@ -26,8 +26,10 @@ const BeerCard = ({beer}: BeerCardProps) => {
                     <img className='h-48 w-96 object-contain' src={beer.img_url} />
                     <div>{beer.name}</div>
                     <div>{beer.brewery}</div>
+                    <div className='text-[14px]'>ABV: {beer.abv}%</div>
                 </div>
-                    <div className='text-[12px]'>
+                    <div className='text-[12px] mt-[5px]'>
+             
                         <p>Likes: {beer.likes_count}</p>
                         <p>Rating: {calculateRating(beer)}</p>
                     </div>
