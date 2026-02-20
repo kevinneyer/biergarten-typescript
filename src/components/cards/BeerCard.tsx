@@ -21,29 +21,27 @@ const BeerCard = ({beer}: BeerCardProps) => {
 
     return (
         <>
-            <div className='bg-white flex flex-col text-black p-4 max-h-[400px] min-h-[400px] rounded-lg shadow-sm shadow-white'>
+            <div className='bg-white flex flex-col text-black p-4 max-h-[450px] min-h-[450px] rounded-lg shadow-sm shadow-white'>
                 <div className='mt-auto'>
                     <img className='h-48 w-96 object-contain' src={beer.img_url} />
                     <div>{beer.name}</div>
                     <div>{beer.brewery}</div>
                     <div className='text-[14px]'>ABV: {beer.abv}%</div>
                 </div>
-                    <div className='text-[12px] mt-[5px]'>
-             
+                    <div className='text-[13px] mt-[5px]'>
                         <p>Likes: {beer.likes_count}</p>
+                        <p>Reviews: {beer.reviews?.length}</p>
                         <p>Rating: {calculateRating(beer)}</p>
                     </div>
-                <div className='mt-auto'>
+                <div className='mt-auto cursor-pointer'>
                     <button 
-                        className='bg-blue-200 p-2 rounded-sm' 
+                        className='bg-transparent text-black p-2 border-2 border-black rounded-md  hover:bg-black hover:text-white transition-all ease-in-out cursor-pointer' 
                         type="button"
                     >
-                        <NavLink
+                        <NavLink 
                             to={`/beers/${beer.id}`}
-                            className={({ isActive }) =>
-                                isActive ? "text-red-500" : "text-black"
-                            }
-                            >
+                            className='font-semibold'
+                        >
                             See More Info
                         </NavLink>
                     </button>

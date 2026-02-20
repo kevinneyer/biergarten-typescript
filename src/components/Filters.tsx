@@ -44,7 +44,7 @@ const Filters = ({filterStyles, onFilterChange, onSortChange, onSortOrderChange}
     };
 
     return (
-        <div className='flex'>
+        <div className='flex absolute w-full'>
             <div 
                 className='w-[250px] bg-white  rounded-md border-2 border-black cursor-pointer text-black overflow-y-scroll'
                 style={{
@@ -92,7 +92,7 @@ const Filters = ({filterStyles, onFilterChange, onSortChange, onSortOrderChange}
                 </div>
             </div>
             {sort ?
-                <div className='ml-[15px] flex gap-[5px] items-center'>
+                <div className='ml-[15px] flex gap-[5px] mt-[5px]'>
                     <div 
                         className='flex justify-center items-center w-[100px] text-black rounded-full text-center h-[30px] cursor-pointer'
                         onClick={() => sortOrderHandler('ascending')}
@@ -107,6 +107,7 @@ const Filters = ({filterStyles, onFilterChange, onSortChange, onSortOrderChange}
                         className='flex justify-center items-center w-[100px] text-black rounded-full text-center h-[30px] cursor-pointer'
                         onClick={() => sortOrderHandler('descending')}
                         style={{
+                            // borderColor: sortOrder === 'descending' ? 'oklch(21% 0.034 264.665)' : 'oklch(70.7% 0.022 261.325)',
                             backgroundColor: sortOrder === 'descending' ? 'oklch(70.7% 0.022 261.325)' : 'oklch(96.7% 0.003 264.542)',
                         }}
                     >
@@ -116,7 +117,7 @@ const Filters = ({filterStyles, onFilterChange, onSortChange, onSortOrderChange}
             : null}
             {shouldShowClearButton ?
                 <div 
-                    className='w-[150px] bg-white  rounded-md border-2 border-black cursor-pointer text-black overflow-y-scroll max-h-10 ml-auto'
+                    className='ml-auto w-[150px] bg-white border-2 border-black rounded-md cursor-pointer text-black max-h-10 hover:bg-gray-400 transition-all ease-in-out'
                     onClick={clearFilterHandler}
                 >
                     <div className='py-[5px] w-full text-center'>

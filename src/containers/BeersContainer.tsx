@@ -86,7 +86,7 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
 
     return(
         <div>
-            <div className='absolute mt-[5px]'>
+            <div className='mt-[5px] relative w-full'>
                 <Filters 
                     filterStyles={filterStyles}
                     onFilterChange={onFilterChange}
