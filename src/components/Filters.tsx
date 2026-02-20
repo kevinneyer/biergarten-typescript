@@ -4,28 +4,36 @@ interface FiltersProps {
     filterStyles: string[];
     onFilterChange: (style: string | null) => void;
     onSortChange: (sortString: string | null) => void;
+    onSortOrderChange: (sortString: string) => void;
 }
-const Filters = ({filterStyles, onFilterChange, onSortChange}: FiltersProps) => {
+
+const Filters = ({filterStyles, onFilterChange, onSortChange, onSortOrderChange}: FiltersProps) => {
     const [styleFilterOpen, setStyleFilterOpen] = useState<boolean>(false);
     const [sortFilterOpen, setSortFilterOpen] = useState<boolean>(false);
     const [style, setStyle] = useState<string | null>(null);
     const [sort, setSort] = useState<string | null>(null);
+    const [sortOrder, setSortOrder] = useState<string>('ascending');
 
     const sortLabels = ['ABV', 'Likes', 'Reviews', 'Rating'] ;
     const shouldShowClearButton = style || sort;
     const openHeight = '150px';
     const closedHeight = '40px';
 
-    const styleFilterHandler = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+    const styleFilterHandler = (e: React.MouseEvent<HTMLInputElement, MouseEvent>): void => {
         const styleValue = (e.target as HTMLInputElement).value;
         setStyle(styleValue);
         onFilterChange(styleValue);
     };
 
-    const sortHandler = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+    const sortHandler = (e: React.MouseEvent<HTMLInputElement, MouseEvent>): void => {
         const value = (e.target as HTMLInputElement).value;
         setSort(value);
         onSortChange(value.toLowerCase());
+    };
+
+    const sortOrderHandler = (stringVal: string): void => {
+        setSortOrder(stringVal);
+        onSortOrderChange(stringVal);
     };
 
     const clearFilterHandler = () => {
@@ -83,6 +91,29 @@ const Filters = ({filterStyles, onFilterChange, onSortChange}: FiltersProps) => 
                 : null}
                 </div>
             </div>
+            {sort ?
+                <div className='ml-[15px] flex gap-[5px] items-center'>
+                    <div 
+                        className='flex justify-center items-center w-[100px] text-black rounded-full text-center h-[30px] cursor-pointer'
+                        onClick={() => sortOrderHandler('ascending')}
+                        style={{
+                            // borderColor: sortOrder === 'ascending' ? 'oklch(21% 0.034 264.665)' : 'oklch(70.7% 0.022 261.325)',
+                            backgroundColor: sortOrder === 'ascending' ? 'oklch(70.7% 0.022 261.325)' : 'oklch(96.7% 0.003 264.542)',
+                        }}
+                    >
+                        Asc
+                    </div>
+                    <div 
+                        className='flex justify-center items-center w-[100px] text-black rounded-full text-center h-[30px] cursor-pointer'
+                        onClick={() => sortOrderHandler('descending')}
+                        style={{
+                            backgroundColor: sortOrder === 'descending' ? 'oklch(70.7% 0.022 261.325)' : 'oklch(96.7% 0.003 264.542)',
+                        }}
+                    >
+                        Desc
+                    </div>
+                </div>
+            : null}
             {shouldShowClearButton ?
                 <div 
                     className='w-[150px] bg-white  rounded-md border-2 border-black cursor-pointer text-black overflow-y-scroll max-h-10 ml-auto'
