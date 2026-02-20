@@ -20,6 +20,7 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [style, setStyle] = useState<string | null>(null);
     const [sort, setSort] = useState<string | null>(null);
+    const [sortDirection, setSortDirection] = useState<string>('asc');
     const [fetchError, setFetchError] = useState<boolean>(false);
     
     const slugify = (text: string): string => {
@@ -35,7 +36,9 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
 
         if (sort) {
             queryParams.append('sort_by', sort);
+            queryParams.append('sort_direction', sortDirection);
         }
+        
         const queryString = queryParams.toString();
         const url = `${API_URL}/beers?${queryString}`;
 
@@ -56,9 +59,8 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
             setFetchError(false);
             setIsLoading(false);
         })
-    }, [style, sort]);
+    }, [style, sort, sortDirection]);
 
-    // This needs to be straightened out or combined into one function.
     const onFilterChange = (newStyle: string | null): void => {
         if (newStyle !== style) {
             setStyle(newStyle);
@@ -66,19 +68,30 @@ const BeersContainer = ({currentUser}: BeersContainerProps) => {
             setFetchError(false);
         }
     };
-    // Specifically this.
+
     const onSortChange = (sortString: string | null): void => {
-        console.log(sortString)
         setSort(sortString);
+        setIsLoading(true);
+    };
+
+    const onSortOrderChange = (string: string): void => {
+        if (string === 'ascending') {
+            setSortDirection('asc');
+            setIsLoading(true);
+        } else {
+            setSortDirection('desc');
+            setIsLoading(true);
+        }
     };
 
     return(
         <div>
-            <div className='absolute mt-[5px]'>
+            <div className='mt-[5px] relative w-full'>
                 <Filters 
                     filterStyles={filterStyles}
                     onFilterChange={onFilterChange}
-                    onSortChange={onSortChange}  
+                    onSortChange={onSortChange}
+                    onSortOrderChange={onSortOrderChange}
                 />
             </div>
             <div className='pt-15 h-full'>
