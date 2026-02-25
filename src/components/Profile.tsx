@@ -1,3 +1,5 @@
+import { NavLink } from 'react-router';
+
 interface ProfileProps {
     currentUser: UserInterface | null;
     profileUser: UserInterface | null;
@@ -71,7 +73,7 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
                         }
                     </div>
                     <div>
-                        Reviews
+                        <div className='text-2xl font-bold'>Reviews</div>
                         <div className='mt-4'>
                             {!hasReviews ?
                                 'No Reviews Yet!'
@@ -101,21 +103,28 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
                     </div>
                     <div>
                         <div>
-                            Desired Beers
+                            <div className='text-2xl font-bold'>Desired Beers</div>
                             <div className='mt-4'>
                                 {!hasDesiredBeers ? 
                                     'Nothing to see here!'
                                     :
                                     profileUser.favorites.map((favorite: FavoriteInterface) => (
-                                        <div key={favorite.favorite_id} className='bg-white flex gap-2 items-start text-black p-4 max-h-[125px] min-h-[125px] rounded-lg shadow-sm shadow-white mt-2'>
-                                            <div>
-                                                <img className='w-20 h-20 object-contain' src={favorite.image} />
+                                        <NavLink 
+                                            to={`/beers/${favorite.beer_id}`}
+                                        >
+                                            <div 
+                                                key={favorite.favorite_id} 
+                                                className='bg-white flex gap-2 items-start text-black p-4 max-h-[125px] min-h-[125px] rounded-lg shadow-sm shadow-white mt-2'
+                                            >
+                                                <div>
+                                                    <img className='w-20 h-20 object-contain' src={favorite.image} />
+                                                </div>
+                                                <div className='flex flex-col items-start'>
+                                                    <div className='font-bold'>{favorite.beer}</div>
+                                                    <div className='text-balance text-left'>by {favorite.brewery}</div>
+                                                </div>
                                             </div>
-                                            <div className='flex flex-col items-start'>
-                                                <div className='font-bold'>{favorite.beer}</div>
-                                                <div className='text-balance text-left'>by {favorite.brewery}</div>
-                                            </div>
-                                        </div>
+                                        </NavLink>
                                     ))
                                 }
                             </div>
