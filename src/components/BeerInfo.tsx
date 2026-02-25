@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import { API_URL } from '../config.ts';
 interface BeerInfoProps {
     beer: BeerInterface;
@@ -8,6 +8,7 @@ interface BeerInfoProps {
 
 const BeerInfo = ({beer, isLiked, currentUser}: BeerInfoProps) => {
     const [beerIsLiked, setBeerIsLiked] = useState<boolean>(isLiked);
+    const token = localStorage.token;
 
     const likeBeerHandler = (beerId: number): void => {
         if (currentUser) {
@@ -16,7 +17,7 @@ const BeerInfo = ({beer, isLiked, currentUser}: BeerInfoProps) => {
                 'headers': {
                     'Content-Type': 'appilcation/json',
                     'accepts': 'appilcation/json',
-                    "Authorization": localStorage.token
+                    "Authorization": token
                 },
             })
             .then(res => {
@@ -38,7 +39,7 @@ const BeerInfo = ({beer, isLiked, currentUser}: BeerInfoProps) => {
                 'headers': {
                     'Content-Type': 'appilcation/json',
                     'accepts': 'appilcation/json',
-                    "Authorization": localStorage.token
+                    "Authorization": token
                 },
             })
             .then(res => {
@@ -67,20 +68,26 @@ const BeerInfo = ({beer, isLiked, currentUser}: BeerInfoProps) => {
                 <div><span className='font-bold'>Recommended For:</span> {beer.recommended_drinking}</div>
             </div>
             <div className='mt-3 flex gap-2 cursor-auto'>
-                { !beerIsLiked ? 
+                {!beerIsLiked ? 
                     <button 
-                        className='bg-green-800 rounded-md w-[200px] p-2.5' type='button'
+                        className='bg-green-700 p-2.5 border-2 border-green-700 rounded-sm w-[200px] cursor-pointer hover:bg-green-900 transition-all ease-in-out' 
+                        type='button'
                         onClick={() => likeBeerHandler(beer.id)}    
                     >Like
                     </button>
                     :
                     <button 
-                        className='bg-red-800 rounded-md w-[200px] p-2.5' type='button'
+                        className='bg-red-700 p-2.5 border-2 border-red-700 rounded-sm w-[200px] cursor-pointer hover:bg-red-900 transition-all ease-in-out' 
+                        type='button'
                         onClick={() => unlikeBeerHandler(beer.id)}    
                     >Dislike
                     </button>
                 }
-                <button className='bg-black rounded-md w-[200px] p-2.5' type='button'>Save for Later</button>
+                <button 
+                    className='bg-black p-2.5 border-2 border-black rounded-sm w-[200px] cursor-pointer hover:bg-gray-700 transition-all ease-in-out' 
+                    type='button'
+                    >Save for Later
+                </button>
             </div>
         </div>
     )

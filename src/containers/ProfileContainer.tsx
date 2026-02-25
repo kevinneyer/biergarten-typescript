@@ -75,7 +75,6 @@ const ProfileContainer = ({currentUser, updateCurrentUser}: ProfileContainerProp
 
     const createFollowHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number): void => {
         e.preventDefault();
-        const token = localStorage.token;
 
         if (currentUser) {
             fetch(`${API_URL}/relationships`, {
@@ -101,7 +100,6 @@ const ProfileContainer = ({currentUser, updateCurrentUser}: ProfileContainerProp
 
     const deleteFollowHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
-        const token = localStorage.token;
 
         if (currentUser) {
             if (followId) {
