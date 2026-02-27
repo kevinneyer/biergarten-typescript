@@ -41,7 +41,7 @@ const AddReview = ({contentError, ratingError, submitReviewForm, currentUser}: A
                         className='flex flex-col items-center'
                     >
                         <textarea 
-                            className="mt-2.5 p-[15px] w-full min-h-[300px] bg-white text-black rounded-md"
+                            className="mt-2.5 p-[15px] w-full h-[250px] max-h-[250px] bg-white text-black rounded-md"
                             value={reviewContent}
                             onChange={reviewHandler}
                         />

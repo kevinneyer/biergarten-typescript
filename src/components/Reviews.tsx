@@ -12,7 +12,6 @@ interface ReviewsProps {
 const Reviews = ({beer, currentUser, onReviewAdded, deleteReview}: ReviewsProps) => {
     const [contentError, setContentError] = useState<boolean>(false);
     const [ratingError, setRatingError] = useState<boolean>(false);
-    const [showAddReviews, setShowAddReviews] = useState<boolean>(false);
     const [formKey, setFormKey] = useState<number>(0);
 
     const submitReviewHandler = (e: React.FormEvent<HTMLFormElement>, content: string, rating: string): void => {
@@ -78,21 +77,8 @@ const Reviews = ({beer, currentUser, onReviewAdded, deleteReview}: ReviewsProps)
 
     return (
         <div className='px-2.5'>
-            <div className='relative'>
-                <div className='text-3xl font-bold text-center'>Reviews</div>
-                {currentUser ? 
-                    <div className='absolute left-[80%] top-0'>
-                        <button 
-                            className=' w-max text-white bg-black p-2 border-2 border-black rounded-md  hover:bg-transparent hover:text-white transition-all ease-in-out cursor-pointer' 
-                            type="button"
-                            onClick={() => setShowAddReviews(!showAddReviews)}
-                        >
-                            {showAddReviews ? 'Hide' : 'Add Review'}
-                        </button>
-                    </div>
-                : null}
-            </div>
-            <div className='flex flex-col p-4 gap-6'>
+            <div className='text-3xl font-bold text-center mb-[15px]'>Reviews</div>
+            <div className='flex flex-col p-4 gap-6 h-[250px] max-h-[250px] overflow-y-scroll border-2 border-white rounded-md'>
                 {beer && beer.reviews.length > 0 ?
                     beer.reviews.map((review, index) => (
                         <ReviewCard 
@@ -106,15 +92,13 @@ const Reviews = ({beer, currentUser, onReviewAdded, deleteReview}: ReviewsProps)
                 'No Reviews Yet!'    
                 }
             </div>
-            {showAddReviews ? 
-                <AddReview
-                    key={formKey} 
-                    contentError={contentError}
-                    ratingError={ratingError}
-                    submitReviewForm={submitReviewHandler}
-                    currentUser={currentUser}
-                />
-            : null}
+            <AddReview
+                key={formKey} 
+                contentError={contentError}
+                ratingError={ratingError}
+                submitReviewForm={submitReviewHandler}
+                currentUser={currentUser}
+            />
         </div>
     )
 };
