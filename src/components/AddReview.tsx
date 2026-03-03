@@ -7,12 +7,16 @@ interface AddReviewProps {
     ratingError: boolean;
     submitReviewForm: (e: React.FormEvent<HTMLFormElement>, content: string, rating: string) => void;
     currentUser: UserInterface | null;
+    reviewInEdit: ReviewInterface | null;
+    submitEditReviewForm: (e: React.FormEvent<HTMLFormElement>, id: number, content: string, rating: string) => void
 }
 
-const AddReview = ({contentError, ratingError, submitReviewForm, currentUser}: AddReviewProps) => {
-    const [reviewContent, setReviewContent] = useState<string>('');
-    const [reviewRating, setReviewRating] = useState<string>('0');
+const AddReview = ({contentError, ratingError, submitReviewForm, currentUser, reviewInEdit, submitEditReviewForm}: AddReviewProps) => {
+    const [reviewContent, setReviewContent] = useState<string>(reviewInEdit?.content ?? '');
+    const [reviewRating, setReviewRating] = useState<string>(reviewInEdit?.rating.toString() ??'0');
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
+    
+    const isEdit = !!reviewInEdit;
     
     const reviewHandler = (e: ChangeEvent<HTMLTextAreaElement>): void => {
         setReviewContent(e.target.value);
@@ -24,8 +28,13 @@ const AddReview = ({contentError, ratingError, submitReviewForm, currentUser}: A
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         setIsProcessing(true);
-        submitReviewForm(e, reviewContent, reviewRating)
-    }
+        if (isEdit) {
+            submitEditReviewForm(e, reviewInEdit.review_id, reviewContent, reviewRating);
+        } else {
+            submitReviewForm(e, reviewContent, reviewRating);
+        }
+
+    };
 
     return (
         <div>
@@ -33,8 +42,8 @@ const AddReview = ({contentError, ratingError, submitReviewForm, currentUser}: A
             <div className='relative'>
                 <div className='absolute top-[40%] left-[45%]'>{isProcessing ? <ClipLoader size='50px'/> : null}</div>
                 <div>
-                    <div className='text-3xl font-bold mt-[30px]'>
-                        Add a Review
+                    <div className='text-3xl font-bold mt-[30px] text-center'>
+                        {isEdit ? 'Edit Your Review' : 'Add a Review'}
                     </div>
                     <form 
                         onSubmit={(e) => submitHandler(e)}
@@ -56,7 +65,7 @@ const AddReview = ({contentError, ratingError, submitReviewForm, currentUser}: A
                                 className='cursor-pointer mt-2.5 p-2.5 outline outline-offset-2 rounded-md hover:bg-blue-400 duration-300 ease-in-out' 
                                 type="submit"
                             >
-                                Submit Review
+                                Submit
                             </button>
                         : null}
                     </form>

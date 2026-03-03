@@ -2,10 +2,11 @@ interface ReviewCardProps {
     review: ReviewInterface;
     currentUser: UserInterface | null;
     deleteReview: (e: React.MouseEvent<HTMLDivElement>, id: number) => void;
+    editReview: (review: ReviewInterface) => void;
 
 }
 
-const ReviewCard  = ({review, currentUser, deleteReview}: ReviewCardProps) => {
+const ReviewCard  = ({review, currentUser, deleteReview, editReview}: ReviewCardProps) => {
     return (
         <div className="flex flex-col items-start inset-ring-2 rounded-2xl p-2.5">
             <div className='flex items-center w-full gap-2.5'>
@@ -16,7 +17,7 @@ const ReviewCard  = ({review, currentUser, deleteReview}: ReviewCardProps) => {
                 </div>
                 {review.user_id == currentUser?.id  ? 
                     <div className="ml-auto cursor-pointer flex flex-col items-start">
-                        <div>
+                        <div onClick={() => editReview(review)}>
                             Edit
                         </div>
                         <div onClick={(e) => deleteReview(e, review.review_id)}>
