@@ -16,7 +16,7 @@ const BeerCard = ({beer}: BeerCardProps) => {
             return accum + rate;
         },0)
 
-        return total / numberOfReviews;
+        return (total / numberOfReviews).toFixed(1);
     };
 
     return (

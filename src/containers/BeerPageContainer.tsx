@@ -42,7 +42,27 @@ const BeerPageContainer = ({currentUser, updateCurrentUser}: BeerPageContainerPr
                 reviews: [...currentUser.reviews, newReview]
             });
         }
-    }; 
+    };
+
+    const handleReviewUpdated = (updatedReview: ReviewInterface): void => {
+        if (showBeer && showBeer.reviews) {
+            setShowBeer({
+                ...showBeer,
+                reviews: showBeer.reviews.map((review: ReviewInterface) => 
+                    review.review_id === updatedReview.review_id ? updatedReview : review
+                )
+            });
+        }
+
+        if (currentUser?.id == updatedReview.user_id) {
+                updateCurrentUser({
+                ...currentUser,
+                reviews: currentUser.reviews.map((review: ReviewInterface) => 
+                    review.review_id === updatedReview.review_id ? updatedReview : review
+                )
+            });
+        }
+    };
 
     const deleteReviewApiHandler = (e: React.MouseEvent<HTMLDivElement>, id: number): void => {
         e.preventDefault();
@@ -85,6 +105,7 @@ const BeerPageContainer = ({currentUser, updateCurrentUser}: BeerPageContainerPr
                         beer={showBeer} 
                         currentUser={currentUser} 
                         onReviewAdded={handleReviewAdded}
+                        onReviewUpdated={handleReviewUpdated}
                         deleteReview={deleteReviewApiHandler}
                     />
                 </div>
