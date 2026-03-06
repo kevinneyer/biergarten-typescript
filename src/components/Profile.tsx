@@ -1,4 +1,6 @@
 import { NavLink } from 'react-router';
+import Modal from 'react-modal';
+import { useState, useEffect } from 'react';
 
 interface ProfileProps {
     currentUser: UserInterface | null;
@@ -20,7 +22,25 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
     const hasReviews = profileUser?.reviews?.length > 0;
     const hasDesiredBeers = profileUser?.favorites?.length > 0;
     const isMe = profileUser?.id == currentUser?.id;
+    const [editProfileOpen, setEditProfileOpen] = useState<boolean>(false);
 
+        const customStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            width: '50%',
+            backgroundColor: '#242424'
+        },
+    };
+
+    useEffect(() => {
+        Modal.setAppElement('#root');
+    },[]);
+        
     const deleteReviewHandler = (e: React.MouseEvent<HTMLDivElement>, id: number): void => {
         deleteReview(e, id)
     };
@@ -33,13 +53,27 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
         deleteFollowHandler(e);
     };
 
+    const openEditProfileHandler = (e: React.MouseEvent<HTMLDivElement>,) => {
+        console.log(e);
+        setEditProfileOpen(true);
+    };
+
     return (
         <div className='p-8'>
             {profileUser ?
+            <div>
                 <div className='grid grid-cols-3 gap-5'>
                     <div className='flex flex-col items-start gap-4'>
                         <img className='min-w-[200px] max-w-[200px] object-contain' src={profileUser.image} />
                         <div>{profileUser.username}</div>
+                        {isMe ? 
+                            <div 
+                                className='p-2 px-4 -mt-2.5 bg-black text-white rounded-md hover:bg-gray-700 cursor-pointer transition-all ease-in-out'
+                                onClick={(e) => openEditProfileHandler(e)}
+                            >
+                                Edit Profile
+                            </div>
+                        : null}
                         <div className='flex flex-col items-start'>
                             <div>
                                 Following: {profileUser.followeds?.length}
@@ -131,6 +165,17 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
                         </div>
                     </div>
                 </div>
+                <Modal 
+                    isOpen={editProfileOpen} 
+                    style={customStyles} 
+                    overlayClassName="Overlay"
+                >
+                    <div 
+                        className='cursor-pointer' 
+                        onClick={() => setEditProfileOpen(false)}
+                    >X</div>
+                </Modal>
+            </div>
             :
             null} 
         </div>
