@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router';
 import Modal from 'react-modal';
 import { useState, useEffect } from 'react';
+import UserForm from './UserForm';
 
 interface ProfileProps {
     currentUser: UserInterface | null;
@@ -171,9 +172,13 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
                     overlayClassName="Overlay"
                 >
                     <div 
-                        className='cursor-pointer' 
+                        className='cursor-pointer font-bold text-xl' 
                         onClick={() => setEditProfileOpen(false)}
                     >X</div>
+                    <UserForm 
+                        currentUser={currentUser}
+                        isEditProfile={true}
+                    />
                 </Modal>
             </div>
             :
