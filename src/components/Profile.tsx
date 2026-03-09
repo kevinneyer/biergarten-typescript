@@ -2,6 +2,7 @@ import { NavLink } from 'react-router';
 import Modal from 'react-modal';
 import { useState, useEffect } from 'react';
 import UserForm from './UserForm';
+import { API_URL } from '../config';
 
 interface ProfileProps {
     currentUser: UserInterface | null;
@@ -24,6 +25,7 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
     const hasDesiredBeers = profileUser?.favorites?.length > 0;
     const isMe = profileUser?.id == currentUser?.id;
     const [editProfileOpen, setEditProfileOpen] = useState<boolean>(false);
+    const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
         const customStyles = {
         content: {
@@ -46,17 +48,50 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
         deleteReview(e, id)
     };
 
-    const createFollow = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
+    const createFollow = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number): void => {
         createFollowHandler(e, id);
     };
 
-    const deleteFollow = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const deleteFollow = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
         deleteFollowHandler(e);
     };
 
-    const openEditProfileHandler = (e: React.MouseEvent<HTMLDivElement>,) => {
-        console.log(e);
+    const openEditProfileHandler = (): void => {
         setEditProfileOpen(true);
+    };
+
+    const editApiHandler = (username: string, email: string, image: string): void => {
+        
+        if (currentUser) {
+            setShowSpinner(true);
+            fetch(`${API_URL}/users/${currentUser.id}`, {
+                method: "PATCH",
+                headers: {
+                    'content-type': 'application/json',
+                    accept: 'application/json',
+                    'Authorization': localStorage.token
+                },
+                body: JSON.stringify({
+                    username,
+                    email,
+                    image
+                })
+            })
+            .then(res => {
+                if (!res.ok) {
+                    alert('Something went wrong');
+                    return;
+                }
+
+                return res.json();
+            })
+            .then (data => {
+                console.log(data )
+            })
+        } else {
+            alert('You need to logged in');
+            return;
+        }
     };
 
     return (
@@ -70,7 +105,7 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
                         {isMe ? 
                             <div 
                                 className='p-2 px-4 -mt-2.5 bg-black text-white rounded-md hover:bg-gray-700 cursor-pointer transition-all ease-in-out'
-                                onClick={(e) => openEditProfileHandler(e)}
+                                onClick={openEditProfileHandler}
                             >
                                 Edit Profile
                             </div>
@@ -178,6 +213,8 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
                     <UserForm 
                         currentUser={currentUser}
                         isEditProfile={true}
+                        editApiHandler={editApiHandler}
+                        showSpinner={showSpinner}
                     />
                 </Modal>
             </div>

@@ -2,8 +2,11 @@ import { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 
 interface Props {
-    currentUser: UserInterface | null;
-    isEditProfile: boolean | false;
+    currentUser?: UserInterface | null;
+    isEditProfile?: boolean;
+    createAccountHandler?: (username: string, email: string, password: string | null, image: string) => void;
+    showSpinner?: boolean;
+    editApiHandler?: (username: string, email: string, image: string) => void;
 }
 
 interface ErrorInterface {
@@ -14,7 +17,7 @@ interface ErrorInterface {
     image: boolean;
 }
 
-const UserForm = ({currentUser, isEditProfile}: Props) => {
+const UserForm = ({currentUser, isEditProfile, createAccountHandler, showSpinner, editApiHandler}: Props) => {
     const [username, setUsername] = useState<string>(currentUser?.username ?? '');
     const [password, setPassword] = useState<string | null>(null);
     const [confirmPassword, setConfirmPassword] = useState<string | null>(null);
@@ -29,7 +32,7 @@ const UserForm = ({currentUser, isEditProfile}: Props) => {
         emailError: false,
         image: false,
     });
-    const [showSpinner, setShowSpinner] = useState<boolean>(false);
+    // const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
         const handleUsername = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setUsername(e.target.value)
@@ -59,87 +62,120 @@ const UserForm = ({currentUser, isEditProfile}: Props) => {
         setShowConfirmPassword(!showConfirmPassword);
     };
 
+    const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>): void => {
+        e.preventDefault();
+        const passwordError = !isEditProfile && (!password || password.length === 0);
+        const confirmError = !isEditProfile && password !== confirmPassword;
+
+        const newErrors: ErrorInterface = {
+            usernameError: !username || username.length === 0,
+            passwordError: passwordError,
+            passwordMatch: confirmError,
+            emailError: !email || email.length === 0,
+            image: false,
+        };
+
+        setFormErrors(newErrors);
+        const hasErrors = Object.values(newErrors).some(value => value === true);
+
+        if (hasErrors) {
+            return;
+        }
+
+        if (isEditProfile) {
+            if (editApiHandler) {
+                editApiHandler(username, email, image);
+            }
+        } else if (!isEditProfile && createAccountHandler) {
+            createAccountHandler(username, email, password, image);
+        }
+    };
+
     return (
-        <div className='flex flex-col items-center'>
-            <div className='bg-[#242424] rounded-md w-[600px] p-5 text-white'>
-                <div className='flex flex-col items-center'>
-                    <span className='text-[16px] font-bold'>Create Account</span>
-                    <form className='w-[300px] flex flex-col gap-4 mt-5' onSubmit={(e) => createAccountHandler(e)}>
-                        <div className='text-black flex flex-col gap-6'>
-                            <div>
+        <>
+            <div className='flex flex-col items-center'>
+                <div className='bg-[#242424] rounded-md w-[600px] p-5 text-white'>
+                    <div className='flex flex-col items-center'>
+                        <span className='text-[16px] font-bold'>{isEditProfile ? 'Edit Your Profile': 'Create an Account'}</span>
+                        <form className='w-[300px] flex flex-col gap-4 mt-5' onSubmit={(e) => formSubmitHandler(e)}>
+                            <div className='text-black flex flex-col gap-6'>
+                                <div>
+                                    <input 
+                                        className='bg-white p-[5px] w-full' 
+                                        type='text' 
+                                        placeholder='Enter Username...'
+                                        value={username}
+                                        onChange={handleUsername}
+                                    />
+                                    {formErrors.usernameError ?
+                                        <p className='text-red-600 text-[12px] text-left'>Username cannot be empty</p>
+                                        :
+                                        null
+                                    }
+                                </div>
+                                <div>
+                                    <input 
+                                        className='bg-white p-[5px] w-full' 
+                                        type='email' 
+                                        placeholder='Enter Email...'
+                                        value={email}
+                                        onChange={handleEmail} 
+                                    />
+                                    {formErrors.emailError ? 
+                                        <p className='text-red-600 text-[12px] text-left'>Email cannot be empty</p>
+                                        :
+                                        null
+                                    }
+                                </div>
+                                {!isEditProfile ?
+                                    <>
+                                        <div>
+                                            <div className='flex items-center'>
+                                                <input className='bg-white p-[5px] w-full' type={showPassword ? 'text' : 'password'} placeholder='Enter Password...' onChange={handlePassword} />
+                                                <span className='text-white w-[5px] pl-[5px] cursor-pointer' onClick={passwordVisibleHandler}>{showPassword ? 'Hide' : 'Show'}</span>
+                                            </div>
+                                            {formErrors.passwordError ? 
+                                                <p className='text-red-600 text-[12px] text-left'>Password cannot be empty</p>
+                                                :
+                                                null
+                                            }
+                                        </div>
+                                        <div>
+                                            <div className='flex items-center'>
+                                                <input className='bg-white p-[5px] w-full' type={showConfirmPassword ? 'text' : 'password'} placeholder='Confirm Password...' onChange={handleConfirmPassword} />
+                                                <span className='text-white w-[5px] pl-[5px] cursor-pointer' onClick={confirmPasswordVisibleHandler}>{showConfirmPassword ? 'Hide' : 'Show'}</span>
+                                            </div>
+                                            {formErrors.passwordMatch ? 
+                                                <p className='text-red-600 text-[12px] text-left'>Passwords don't match</p>
+                                                :
+                                                null
+                                            }
+                                        </div>
+                                    </>
+                                : null}
                                 <input 
-                                    className='bg-white p-[5px] w-full' 
+                                    className='bg-white p-[5px]' 
                                     type='text' 
-                                    placeholder='Enter Username...'
-                                    value={username}
-                                    onChange={handleUsername}
+                                    placeholder='Enter Image...' 
+                                    value={image}
+                                    onChange={handleImage}
                                 />
-                                {formErrors.usernameError ?
-                                    <p className='text-red-600 text-[12px] text-left'>Username cannot be empty</p>
-                                    :
-                                    null
-                                }
                             </div>
-                            <div>
-                                <input 
-                                    className='bg-white p-[5px] w-full' 
-                                    type='email' 
-                                    placeholder='Enter Email...'
-                                    value={email}
-                                    onChange={handleEmail} 
-                                />
-                                {formErrors.emailError ? 
-                                    <p className='text-red-600 text-[12px] text-left'>Email cannot be empty</p>
-                                    :
-                                    null
-                                }
-                            </div>
-                            {!isEditProfile ?
-                                <>
-                                    <div>
-                                        <div className='flex items-center'>
-                                            <input className='bg-white p-[5px] w-full' type={showPassword ? 'text' : 'password'} placeholder='Enter Password...' onChange={handlePassword} />
-                                            <span className='text-white w-[5px] pl-[5px] cursor-pointer' onClick={passwordVisibleHandler}>{showPassword ? 'Hide' : 'Show'}</span>
-                                        </div>
-                                        {formErrors.passwordError ? 
-                                            <p className='text-red-600 text-[12px] text-left'>Password cannot be empty</p>
-                                            :
-                                            null
-                                        }
-                                    </div>
-                                    <div>
-                                        <div className='flex items-center'>
-                                            <input className='bg-white p-[5px] w-full' type={showConfirmPassword ? 'text' : 'password'} placeholder='Confirm Password...' onChange={handleConfirmPassword} />
-                                            <span className='text-white w-[5px] pl-[5px] cursor-pointer' onClick={confirmPasswordVisibleHandler}>{showConfirmPassword ? 'Hide' : 'Show'}</span>
-                                        </div>
-                                        {formErrors.passwordMatch ? 
-                                            <p className='text-red-600 text-[12px] text-left'>Passwords don't match</p>
-                                            :
-                                            null
-                                        }
-                                    </div>
-                                </>
+                            {!showSpinner ?
+                                <input className='bg-gray-100 hover:bg-gray-400 cursor-pointer transition-all ease-in-out text-black p-[5px] rounded-md' type='submit'></input>
                             : null}
-                            <input 
-                                className='bg-white p-[5px]' 
-                                type='text' 
-                                placeholder='Enter Image...' 
-                                value={image}
-                                onChange={handleImage}
-                            />
-                        </div>
-                        <input className='bg-gray-100 hover:bg-gray-400 cursor-pointer transition-all ease-in-out text-black p-[5px] rounded-md' type='submit'></input>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-                <ClipLoader
-                    loading={showSpinner}
-                    color='#fff'
-                    size={150}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                />
             </div>
-        </div>
+            <ClipLoader
+                loading={showSpinner}
+                color='#fff'
+                size={150}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+            />
+        </>
     );
 };
 
