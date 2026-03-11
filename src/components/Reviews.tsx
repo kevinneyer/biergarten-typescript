@@ -186,7 +186,11 @@ const Reviews = ({beer, currentUser, onReviewAdded,onReviewUpdated, deleteReview
                 'No Reviews Yet!'    
                 }
             </div>
-            <Modal isOpen={modalIsOpen} style={customStyles} overlayClassName="Overlay">
+            <Modal 
+                isOpen={modalIsOpen} 
+                style={customStyles} 
+                overlayClassName="Overlay"
+            >
                 <div onClick={closeModalHandler}>X</div>
                 <AddReview
                     key={formKey} 

@@ -142,6 +142,7 @@ const ProfileContainer = ({currentUser, updateCurrentUser}: ProfileContainerProp
                 createFollowHandler={createFollowHandler}
                 deleteFollowHandler={deleteFollowHandler}
                 isFollowing={isFollowing}
+                updateCurrentUser={updateCurrentUser}
             />
         </div>
     )
