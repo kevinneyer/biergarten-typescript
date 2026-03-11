@@ -11,7 +11,9 @@ interface ProfileProps {
     createFollowHandler: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => void;
     deleteFollowHandler: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
     isFollowing: boolean;
+    updateCurrentUser: (updatedUser: UserInterface) => void;
 }
+
 interface FavoriteInterface {
     beer: string;
     beer_id: number;
@@ -20,7 +22,7 @@ interface FavoriteInterface {
     image: string;
 }
 
-const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, deleteFollowHandler, isFollowing}: ProfileProps) => {
+const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, deleteFollowHandler, isFollowing, updateCurrentUser}: ProfileProps) => {
     const hasReviews = profileUser?.reviews?.length > 0;
     const hasDesiredBeers = profileUser?.favorites?.length > 0;
     const isMe = profileUser?.id == currentUser?.id;
@@ -61,7 +63,6 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
     };
 
     const editApiHandler = (username: string, email: string, image: string): void => {
-        
         if (currentUser) {
             setShowSpinner(true);
             fetch(`${API_URL}/users/${currentUser.id}`, {
@@ -86,7 +87,9 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
                 return res.json();
             })
             .then (data => {
-                console.log(data )
+                updateCurrentUser(data);
+                setShowSpinner(false);
+                setEditProfileOpen(false);
             })
         } else {
             alert('You need to logged in');
@@ -210,7 +213,7 @@ const Profile = ({profileUser, currentUser, deleteReview, createFollowHandler, d
                         className='cursor-pointer font-bold text-xl' 
                         onClick={() => setEditProfileOpen(false)}
                     >X</div>
-                    <UserForm 
+                    <UserForm
                         currentUser={currentUser}
                         isEditProfile={true}
                         editApiHandler={editApiHandler}
